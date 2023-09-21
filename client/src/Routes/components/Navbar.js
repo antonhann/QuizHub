@@ -9,7 +9,7 @@ const Navbar = (props) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              <NavLinks linkName = "LinkOne" active = {active} href = "/"/>
+              <NavLinks linkName = "Create" active = {active} href = "/create"/>
               <NavLinks linkName = "LinkTwo" active = {active} href = "/"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
             </ul>

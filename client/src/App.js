@@ -1,5 +1,6 @@
 import './App.css';
 import Home from './Routes/Home';
+import CreateStudySet from './Routes/Create';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -9,6 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path = "/" element = {<Home/>}/>
+          <Route path = "/create" element = {<CreateStudySet/>}/>
         </Routes>
       </BrowserRouter>
     </div>
@@ -16,3 +18,29 @@ function App() {
 }
 
 export default App;
+
+
+// import React from "react";
+// import logo from "./logo.svg";
+// import "./App.css";
+
+// function App() {
+//   const [data, setData] = React.useState(null);
+
+//   React.useEffect(() => {
+//     fetch("/api")
+//       .then((res) => res.json())
+//       .then((data) => setData(data.message));
+//   }, []);
+
+//   return (
+//     <div className="App">
+//       <header className="App-header">
+//         <img src={logo} className="App-logo" alt="logo" />
+//         <p>{!data ? "Loading..." : data}</p>
+//       </header>
+//     </div>
+//   );
+// }
+
+// export default App;
