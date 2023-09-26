@@ -15,7 +15,7 @@
 }
 .createStudySetHeading{
   background-color: gray;
-  position: sticky;
+  position: absolute;
   top: 0;
   height: 60px;
   width: 100%;
