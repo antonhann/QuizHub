@@ -6,6 +6,21 @@
   justify-content: center;
   align-items: center;
 }
+.btn{
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.mainButton {
+  height: 50px;
+  width: 80px;
+  color: #fff;
+  background-color: transparent;
+  border-radius: 10px;
+
+}
 .createStudySet{
   height: 180vh;
   display: flex;
@@ -15,7 +30,7 @@
 }
 .createStudySetHeading{
   background-color: gray;
-  position: absolute;
+  position: sticky;
   top: 0;
   height: 60px;
   width: 100%;

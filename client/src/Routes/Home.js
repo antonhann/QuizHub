@@ -5,10 +5,16 @@ const Home = () => {
         <div>
             <Navbar active = "LinkOne"/>
             <div className="landingPage">
-                <h2>WELCOME TO QUIZLET</h2>
+                <div className="landingPageContainer">
+                        <h2 className="landingPageHeading">WELCOME TO QUIZHUB</h2>
+                    <div className="btn">
+                        <button className ="mainButton">BTN</button>
+                    </div>
+                </div>
             </div>
             <Footer/>
         </div>
+
     )
 }
 export default Home;
