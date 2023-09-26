@@ -22,6 +22,7 @@ const CreateStudySet = () => {
                 </form>
             </div>
             <Footer/>
+        
         </div>
         // hello
     )
