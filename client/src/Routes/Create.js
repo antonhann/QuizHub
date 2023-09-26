@@ -24,7 +24,7 @@ const CreateStudySet = () => {
             <Footer/>
         
         </div>
-        //smd
+        //smd anton ha from hunter college
     )
 };
 
