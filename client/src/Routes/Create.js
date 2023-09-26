@@ -24,7 +24,7 @@ const CreateStudySet = () => {
             <Footer/>
         
         </div>
-        // hello
+        //smd
     )
 };
 
