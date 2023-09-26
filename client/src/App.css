@@ -24,7 +24,8 @@
 .createStudySet{
   height: 180vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   background-color: black;
   margin-inline: 100px; /* separation from continainer and outside */
 }
@@ -47,6 +48,9 @@
   justify-content: space-around;
   align-items: center;
 }
+textarea {
+  resize: none!important;
+}
 .inputDescription{
   height: 150px;
   width: 30%;
@@ -54,6 +58,13 @@
 .inputTitle{
   height: 40px;
   width: 20%;
+}
+.studyCard{
+  background-color: red;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 footer{
   display: flex;
