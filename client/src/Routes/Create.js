@@ -1,28 +1,57 @@
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StudyCard from "./components/StudyCard";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+const defaultArray = [
+    {
+        term: "",
+        answer: "",
+    },
+    {
+        term: "",
+        answer: "",
+    },
+    {
+        term: "",
+        answer: "",
+    },
+]
 const CreateStudySet = () => {
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
     const [cardArray, changeArr] = useState([]) 
-    const defaultArray = [
-        {
-            term: "",
-            question: "",
-        },
-        {
-            term: "",
-            question: "",
-        },
-        {
-            term: "",
-            question: "",
-        },
-    ]
-    function handleSubmit(){
-        return "hello"
+
+    // function handleSubmit(){
+    //     return "hello"
+    // }
+    const handleArrayChange = (e,index,type) => {
+        const {value} = e.target
+        console.log(value,index)
+        var newItem;
+        changeArr((prevArray) => {
+            if(type == 1){
+                newItem = prevArray[index] = {
+                    term: value,
+                    answer: prevArray[index].answer
+                }
+            }else{
+                newItem = prevArray[index] = {
+                    term: prevArray[index].term,
+                    answer: value
+                }
+            }
+            return[
+                ...prevArray.slice(0,index), 
+                newItem,
+                ...prevArray.slice(index + 1)
+            ]
+        })
     }
+    useEffect(() => {
+        if(cardArray.length === 0){
+            changeArr(defaultArray);
+        }
+    },[])
     return(
         <div>
             <Navbar active = "Create"/>
@@ -36,8 +65,17 @@ const CreateStudySet = () => {
                         <textarea className = "inputDescription" type="text" placeholder = "Descripition" value={description} onChange={(e) => changeDescription(e.target.value)}></textarea>
                     </div>
 
-                    {defaultArray.map((item,index) => {
-                        return <StudyCard index = {index} term = {item.term} answer = {item.answer}/>
+                    {cardArray.map((item,index) => {
+                        return (
+                            <StudyCard 
+                                handleTermChange = {(e) => {handleArrayChange(e,index,1)}}
+                                handleAnswerChange = {(e) => {handleArrayChange(e,index,2)}}
+                                index = {index}
+                                key = {index}
+                                term = {item.term}
+                                answer = {item.answer}
+                            />
+                        )
                     })}
                 </form>
             </div>

@@ -3,14 +3,14 @@ const StudyCard = (props) => {
         index,
         term,
         answer,
+        handleTermChange,
+        handleAnswerChange
     } = props
     return (
         <div className="studyCard">
-            <form>
-                <textarea placeholder="Term"></textarea>
-                <textarea placeholder="Answer"></textarea>
-                <h1>{index}</h1>
-            </form>
+            <textarea placeholder="Term" value = {term} onChange={handleTermChange}></textarea>
+            <textarea placeholder="Answer" value = {answer} onChange={handleAnswerChange}></textarea>
+            <h1>{index}</h1>
         </div>
     )
 }
