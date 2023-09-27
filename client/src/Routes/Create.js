@@ -29,7 +29,7 @@ const CreateStudySet = () => {
         console.log(value,index)
         var newItem;
         changeArr((prevArray) => {
-            if(type == 1){
+            if(type === "term"){
                 newItem = prevArray[index] = {
                     term: value,
                     answer: prevArray[index].answer
@@ -47,11 +47,12 @@ const CreateStudySet = () => {
             ]
         })
     }
+    // eslint-disable-next-line
     useEffect(() => {
         if(cardArray.length === 0){
             changeArr(defaultArray);
         }
-    },[])
+    })
     return(
         <div>
             <Navbar active = "Create"/>
@@ -68,8 +69,8 @@ const CreateStudySet = () => {
                     {cardArray.map((item,index) => {
                         return (
                             <StudyCard 
-                                handleTermChange = {(e) => {handleArrayChange(e,index,1)}}
-                                handleAnswerChange = {(e) => {handleArrayChange(e,index,2)}}
+                                handleTermChange = {(e) => {handleArrayChange(e,index,"term")}}
+                                handleAnswerChange = {(e) => {handleArrayChange(e,index,"answer")}}
                                 index = {index}
                                 key = {index}
                                 term = {item.term}
