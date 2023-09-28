@@ -29,12 +29,9 @@ const CreateStudySet = () => {
     }
     const removeCard = (i) =>{
         const newArr = cardArray.filter((item,index) => {
-            // console.log(index,);
             return index !== i;   
         })
-        // console.log(newArr,i)
         changeArr(newArr)
-        console.log(cardArray)
     }
     const addCard = (i) =>{
         changeArr(cardArray.concat(new StudyCard()))
