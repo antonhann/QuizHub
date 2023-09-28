@@ -1,51 +1,43 @@
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import StudyCardInput from "./components/StudyCardInput";
 import StudyCard from "./components/StudyCard";
 import React, {useState, useEffect} from "react";
 const defaultArray = [
-    {
-        term: "",
-        answer: "",
-    },
-    {
-        term: "",
-        answer: "",
-    },
-    {
-        term: "",
-        answer: "",
-    },
+    new StudyCard(),
+    new StudyCard(),
+    new StudyCard(),
 ]
 const CreateStudySet = () => {
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
     const [cardArray, changeArr] = useState([]) 
 
-    // function handleSubmit(){
-    //     return "hello"
-    // }
-    const handleArrayChange = (e,index,type) => {
+    const handleArrayChange = (e,i,type) => {
         const {value} = e.target
-        console.log(value,index)
-        var newItem;
-        changeArr((prevArray) => {
-            if(type === "term"){
-                newItem = prevArray[index] = {
-                    term: value,
-                    answer: prevArray[index].answer
-                }
-            }else{
-                newItem = prevArray[index] = {
-                    term: prevArray[index].term,
-                    answer: value
+        const updatedArray = cardArray.map((item,index) => {
+            if(index === i){
+                if(type === "term"){
+                    item.term = value
+                }else{
+                    item.answer = value
                 }
             }
-            return[
-                ...prevArray.slice(0,index), 
-                newItem,
-                ...prevArray.slice(index + 1)
-            ]
+            return item
         })
+        changeArr(updatedArray)
+    }
+    const removeCard = (i) =>{
+        const newArr = cardArray.filter((item,index) => {
+            // console.log(index,);
+            return index !== i;   
+        })
+        // console.log(newArr,i)
+        changeArr(newArr)
+        console.log(cardArray)
+    }
+    const addCard = (i) =>{
+        changeArr(cardArray.concat(new StudyCard()))
     }
     // eslint-disable-next-line
     useEffect(() => {
@@ -65,12 +57,13 @@ const CreateStudySet = () => {
                         <input className = "inputTitle" type="text" placeholder = "Title" value={title} onChange={(e) => changeTitle(e.target.value)}></input>
                         <textarea className = "inputDescription" type="text" placeholder = "Descripition" value={description} onChange={(e) => changeDescription(e.target.value)}></textarea>
                     </div>
-
                     {cardArray.map((item,index) => {
                         return (
-                            <StudyCard 
+                            <StudyCardInput 
+                                cardArray = {cardArray}
                                 handleTermChange = {(e) => {handleArrayChange(e,index,"term")}}
                                 handleAnswerChange = {(e) => {handleArrayChange(e,index,"answer")}}
+                                removeCard = {() => removeCard(index)}
                                 index = {index}
                                 key = {index}
                                 term = {item.term}
@@ -78,6 +71,7 @@ const CreateStudySet = () => {
                             />
                         )
                     })}
+                    <button type = "button" onClick={addCard}>Add Card</button>
                 </form>
             </div>
             <Footer/>
