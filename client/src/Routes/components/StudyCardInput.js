@@ -9,7 +9,7 @@ const StudyCardInput = (props) => {
         removeCard
     } = props
     return (
-        <div className="studyCard">
+        <div className="studyCard" key = {index}>
             <textarea placeholder="Term" value = {term} onChange={handleTermChange}></textarea>
             <textarea placeholder="Answer" value = {answer} onChange={handleAnswerChange}></textarea>
             <h1>{index}</h1>

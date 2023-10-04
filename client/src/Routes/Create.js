@@ -3,16 +3,19 @@ import Footer from "./components/Footer";
 import StudyCardInput from "./components/StudyCardInput";
 import StudyCard from "./components/StudyCard";
 import React, {useState, useEffect} from "react";
+import {Link, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
 const defaultArray = [
     new StudyCard(),
     new StudyCard(),
     new StudyCard(),
 ]
+
 const CreateStudySet = () => {
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
     const [cardArray, changeArr] = useState([]) 
-
+    const navigate = useNavigate();
+    
     const handleArrayChange = (e,i,type) => {
         const {value} = e.target
         const updatedArray = cardArray.map((item,index) => {
@@ -33,8 +36,36 @@ const CreateStudySet = () => {
         })
         changeArr(newArr)
     }
-    const addCard = (i) =>{
+    const addCard = () =>{
         changeArr(cardArray.concat(new StudyCard()))
+    }
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        const newArr = cardArray.filter((item) => {
+            return item.term !== "" && item.answer !== ""
+        })
+        if(newArr.length < 3 && title === ""){
+            //handle when there arent two cards or a title
+            console.log("no title / not enough cards")
+            return;
+        }else if(title === ""){
+            //handle when there isnt a title
+            console.log("no title")
+            return;
+        }else if(newArr.length < 3){
+            //handle when there arent two cards
+            console.log("not enough cards")
+            return;
+        }
+        changeArr(newArr)
+        let studySet = {
+            title: title,
+            description: description,
+            studyCards: cardArray,
+        }
+        console.log(studySet)
+        navigate('/', {replace: true});
+        // console.log(cardArray)
     }
     // eslint-disable-next-line
     useEffect(() => {
@@ -69,6 +100,7 @@ const CreateStudySet = () => {
                         )
                     })}
                     <button type = "button" onClick={addCard}>Add Card</button>
+                    <input type = "submit" value="Submit" onClick={(e) => handleSubmit(e)}/>
                 </form>
             </div>
             <Footer/>
