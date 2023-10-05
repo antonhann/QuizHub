@@ -58,9 +58,11 @@ const CreateStudySet = () => {
             return;
         }
         changeArr(newArr)
+
         let studySet = {
             title: title,
             description: description,
+            date: new Date(),
             studyCards: cardArray,
         }
         console.log(studySet)
@@ -85,6 +87,7 @@ const CreateStudySet = () => {
                         <input className = "inputTitle" type="text" placeholder = "Title" value={title} onChange={(e) => changeTitle(e.target.value)}></input>
                         <textarea className = "inputDescription" type="text" placeholder = "Descripition" value={description} onChange={(e) => changeDescription(e.target.value)}></textarea>
                     </div>
+                    <div className="errorMessage"></div>
                     {cardArray.map((item,index) => {
                         return (
                             <StudyCardInput 

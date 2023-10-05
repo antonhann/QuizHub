@@ -10,7 +10,7 @@ const Navbar = (props) => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <NavLinks linkName = "Create" active = {active} href = "/create"/>
-              <NavLinks linkName = "LinkTwo" active = {active} href = "/"/>
+              <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
             </ul>
           </div>

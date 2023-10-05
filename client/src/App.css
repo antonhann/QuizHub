@@ -59,12 +59,35 @@ textarea {
   height: 40px;
   width: 20%;
 }
+.errorMessage{
+  background-color: red;
+  color: white;
+  width: 100%;
+  text-align: center;
+}
 .studyCard{
   background-color: green;
   width: 100%;
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
+}
+
+.studySetCollection{
+  height: 90vh;
+  padding-top: 20px;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: top;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.studySet{
+  text-align: center;
+  background-color: red;
+  width: 100%;
 }
 footer{
   display: flex;

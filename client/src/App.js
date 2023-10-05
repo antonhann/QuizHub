@@ -1,6 +1,7 @@
 import './App.css';
 import Home from './Routes/Home';
 import CreateStudySet from './Routes/Create';
+import StudySetCollection from './Routes/StudySetCollection';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path = "/" element = {<Home/>}/>
           <Route path = "/create" element = {<CreateStudySet/>}/>
+          <Route path = "/study-sets" element = {<StudySetCollection/>}/>
         </Routes>
       </BrowserRouter>
     </div>
