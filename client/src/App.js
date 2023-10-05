@@ -2,6 +2,7 @@ import './App.css';
 import Home from './Routes/Home';
 import CreateStudySet from './Routes/Create';
 import StudySetCollection from './Routes/StudySetCollection';
+import ViewStudySet from './Routes/ViewStudySet';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -13,6 +14,10 @@ function App() {
           <Route path = "/" element = {<Home/>}/>
           <Route path = "/create" element = {<CreateStudySet/>}/>
           <Route path = "/study-sets" element = {<StudySetCollection/>}/>
+          <Route
+            path="/:id/view-study-set"
+            element = {<ViewStudySet/>}
+          />
         </Routes>
       </BrowserRouter>
     </div>

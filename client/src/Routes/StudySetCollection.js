@@ -2,21 +2,24 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StudyCard from "./components/StudyCard";
 import StudySet from "./components/StudySet";
-
+import { v4 as uuidv4 } from 'uuid';
 const testSet = [
     {
+        id: uuidv4(),
         title: "this is study set one",
         description: "here is my description",
         date: new Date(),
         // studyCards: cardArray,
     },
     {
+        id: uuidv4(),
         title: "this is study set two",
         description: "here is my description",
         date: new Date(),
         // studyCards: cardArray,
     },
     {
+        id: uuidv4(),
         title: "this is study set three",
         description: "here is my description",
         date: new Date(),

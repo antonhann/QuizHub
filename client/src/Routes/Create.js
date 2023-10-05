@@ -3,7 +3,8 @@ import Footer from "./components/Footer";
 import StudyCardInput from "./components/StudyCardInput";
 import StudyCard from "./components/StudyCard";
 import React, {useState, useEffect} from "react";
-import {Link, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import {useNavigate} from 'react-router-dom';
 const defaultArray = [
     new StudyCard(),
     new StudyCard(),
@@ -13,7 +14,7 @@ const defaultArray = [
 const CreateStudySet = () => {
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
-    const [cardArray, changeArr] = useState([]) 
+    const [cardArray, changeArr] = useState([])
     const navigate = useNavigate();
     
     const handleArrayChange = (e,i,type) => {
@@ -59,15 +60,15 @@ const CreateStudySet = () => {
         }
         changeArr(newArr)
 
+        const uniqueId = uuidv4();
         let studySet = {
+            id: uniqueId,
             title: title,
             description: description,
             date: new Date(),
             studyCards: cardArray,
         }
-        console.log(studySet)
         navigate('/', {replace: true});
-        // console.log(cardArray)
     }
     // eslint-disable-next-line
     useEffect(() => {
