@@ -1,5 +1,6 @@
 import './App.css';
 import Home from './Routes/Home';
+import LoginPage from './Routes/LoginPage';
 import CreateStudySet from './Routes/Create';
 import StudySetCollection from './Routes/StudySetCollection';
 import ViewStudySet from './Routes/ViewStudySet';
@@ -12,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path = "/" element = {<Home/>}/>
+          <Route path = "/login" element = {<LoginPage/>}/>
           <Route path = "/create" element = {<CreateStudySet/>}/>
           <Route path = "/study-sets" element = {<StudySetCollection/>}/>
           <Route

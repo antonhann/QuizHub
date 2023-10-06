@@ -1,5 +1,9 @@
+import {useNavigate} from 'react-router-dom';
 const Navbar = (props) => { 
-    const {active} = props
+    const {
+      active,
+    } = props
+    const navigate = useNavigate();
     return(
         <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme = "dark">
         <div className="container-fluid">
@@ -12,6 +16,7 @@ const Navbar = (props) => {
               <NavLinks linkName = "Create" active = {active} href = "/create"/>
               <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
+              <button type = "button" onClick={() => {navigate("/login")}}>Login</button>
             </ul>
           </div>
         </div>
