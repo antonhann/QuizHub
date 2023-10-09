@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const user = require("./user")
 //insert pasword after 016:
-const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 async function connect(){
