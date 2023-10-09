@@ -6,8 +6,27 @@ const LoginPage = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleLoginSubmit = () => {
-        
+    const handleLoginSubmit = async (e) => {
+        if(!username || !password){
+            console.log("error")
+            return
+        }
+        try {
+          const response = await fetch('http://localhost:3004/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+          });
+          const result = await response.json();
+          console.log(result);
+        } catch (error) {
+          console.error('Error submitting form:', error);
+        }
     }
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
@@ -42,7 +61,7 @@ const LoginPage = () => {
                         <h3>Password:</h3>
                         <input value = {password} onChange={e => setPassword(e.target.value)}></input>
                     </div>
-                    <button type="submit" onClick={() => handleLoginSubmit()}>Submit</button>
+                    <button type="button" onClick={() => handleLoginSubmit()}>Submit</button>
                 </form>
             </div>
             <Footer/>

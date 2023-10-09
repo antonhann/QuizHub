@@ -4,18 +4,18 @@ const {Schema} = mongoose
 const user = new Schema({
     username: {
         type: String,
-        required: True,
-        unique: True,
+        required: true,
+        unique: true,
     },
     password: {
         type: String,
-        required: True,
-        unique: True,
+        required: true,
+        unique: true,
     },
     email: {
         type: String,
-        required: True,
-        unique: True,
+        required: true,
+        unique: true,
     },
 })
 module.exports = mongoose.model("user", user)
