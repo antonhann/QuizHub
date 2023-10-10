@@ -9,18 +9,30 @@ const hashRounds = 10;
 const PORT = process.env.PORT || 3005;
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: 'http://localhost:3000', // Replace with your actual client origin
+    credentials: true,
+  })
+);
+app.use(bodyParser.json());//to be able to read the request body properly of the api post call
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({
-  secret: 'thisismysecretkey', // a random string used to sign the session ID cookie
-  resave: false,
-  saveUninitialized: true,
-}));
+// to keep track of the current user logged in
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false, // Set to true if using HTTPS
+      httpOnly: true,
+    },
+  })
+);
 
 
 const mongoose = require("mongoose")
-const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 async function connect(){
@@ -60,16 +72,21 @@ app.post("/register", async (req,res) =>{
 })
 
 app.post("/login", async (req,res) =>{
-  console.log("started")
+  console.log(req.session.username)
   const {username, password} = req.body;
   let selected = await user.findOne({username: username})
+  if(!selected){
+    res.json({login:false})
+    return
+  }
   const passwordMatch = await bcrypt.compare(password, selected.password)
   if(passwordMatch){
-    updateSessionUser(selected,req)
+    await updateSessionUser(selected,req)
     res.json({login: true})
-  }else[
+    console.log(req.session.username)
+  }else{
     res.json({login:false})
-  ]
+  }
 });
 
 app.get("/home", async(req,res) => {
@@ -77,13 +94,11 @@ app.get("/home", async(req,res) => {
   res.json({username: req.session.username});
 })
 
-app.get("/api", (req, res) => {
-  res.json({ message: req.session.username});
-});
 
 const updateSessionUser = (user, req) => {
   req.session.username = user.username
   req.session.id = user._id
+  req.session.save(); 
 }
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

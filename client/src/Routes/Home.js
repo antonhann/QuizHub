@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 const Home = () => {
     const [message, changeMessage] = useState("")
     useEffect(() => {
-        fetch('http://localhost:3005/api')
+        fetch('http://localhost:3005/home', {
+            credentials: 'include',
+          })
         .then((res) => {
             if(!res.ok){
                 throw new Error(`HTTP error! Status: ${res.status}`);
@@ -14,7 +16,8 @@ const Home = () => {
             }
         })
         .then(data => {
-            changeMessage(data.message)
+            console.log(data.username)
+            changeMessage(data.username)
         })
         .catch(error => {
             console.error('Fetch error:', error);

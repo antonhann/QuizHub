@@ -15,6 +15,7 @@ const Register = () => {
         }
         let response = await fetch('http://localhost:3005/register',{
             method: "POST",
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -32,6 +33,8 @@ const Register = () => {
         const result = await response.json()
         if(result.added){
             navigate('/', {replace: true});
+        }else{
+            console.log(result)
         }
         //implement result based off server
     }
