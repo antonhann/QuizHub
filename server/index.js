@@ -32,21 +32,13 @@ app.use(
 
 
 const mongoose = require("mongoose")
-const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 async function connect(){
   console.log("connecting")
     await mongoose.connect(url)
-    // await user.create({
-    //     username: "hello",
-    //     password: "hello",
-    //     email: "email",
-    //     userId: "hello",
-    // })
     console.log("connected")
-    // let newuser = await user.find({})
-    // console.log(newuser)
 }
 
 app.post("/register", async (req,res) =>{
@@ -66,17 +58,16 @@ app.post("/register", async (req,res) =>{
     res.json({ added: true, user: newUser });
   }
   catch(error){
-    console.log("error adding user to database")
+    res.status(400).json({message: error})
   }
   return;
 })
 
 app.post("/login", async (req,res) =>{
-  console.log(req.session.username)
   const {username, password} = req.body;
   let selected = await user.findOne({username: username})
   if(!selected){
-    res.json({login:false})
+    res.status(400).json({login:false, error: "user does not exists"})
     return
   }
   const passwordMatch = await bcrypt.compare(password, selected.password)
@@ -85,21 +76,19 @@ app.post("/login", async (req,res) =>{
     res.json({login: true})
     console.log(req.session.username)
   }else{
-    res.json({login:false})
+    res.status(400).json({login:false, error: "password does not match"})
   }
 });
 
 app.get("/home", async(req,res) => {
-  console.log(req.session.username)
   res.json({username: req.session.username});
 })
-
-
 const updateSessionUser = (user, req) => {
   req.session.username = user.username
   req.session.id = user._id
   req.session.save(); 
 }
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
