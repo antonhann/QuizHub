@@ -63,6 +63,7 @@ const LoginPage = () => {
                     </div>
                     <button type="button" onClick={() => handleLoginSubmit()}>Submit</button>
                 </form>
+                <div><a href = '/register'>Not registered yet?</a></div>
             </div>
             <Footer/>
         </div>

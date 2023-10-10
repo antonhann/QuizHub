@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const Home = () => {
     const [message, changeMessage] = useState("")
     useEffect(() => {
-        fetch('http://localhost:3004/api')
+        fetch('http://localhost:3005/api')
         .then((res) => {
             if(!res.ok){
                 throw new Error(`HTTP error! Status: ${res.status}`);

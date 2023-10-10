@@ -4,11 +4,14 @@ const session = require('express-session');
 const cors = require("cors")
 const user = require("./data/user")
 const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 const hashRounds = 10;
-const PORT = process.env.PORT || 3004;
+const PORT = process.env.PORT || 3005;
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
   secret: 'thisismysecretkey', // a random string used to sign the session ID cookie
   resave: false,
@@ -17,8 +20,6 @@ app.use(session({
 
 
 const mongoose = require("mongoose")
-// const user = require("./user")
-//insert pasword after 016:
 const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
@@ -31,59 +32,60 @@ async function connect(){
     //     email: "email",
     //     userId: "hello",
     // })
-    // console.log("connected")
+    console.log("connected")
     // let newuser = await user.find({})
     // console.log(newuser)
 }
 
-app.post("/register", (req,res) =>{
-  const {username, password, email} = req;
-  let hashPassword;
-  bcrypt.hash(password, hashRounds, (err, hash) =>{
-    if(err){
-      //handle error here
-    }else{
-      hashPassword = hash;
-    }
-  })
-  user.create({
-    username: username,
-    email: email,
-    password: hashPassword
-  })
+app.post("/register", async (req,res) =>{
+  const {username, password, email} = req.body;
+  if (!username || !password || !email) {
+    res.status(400).json({ error: 'Invalid form values' });
+    return;
+  }
+  try{
+    let hashPassword = await bcrypt.hash(password, hashRounds)
+    const newUser = await user.create({
+      username: username,
+      email: email,
+      password: hashPassword
+    });
+    updateSessionUser(newUser,req)
+    res.json({ added: true, user: newUser });
+  }
+  catch(error){
+    console.log("error adding user to database")
+  }
+  return;
 })
 
 app.post("/login", async (req,res) =>{
-  const {username, password} = req;
-  await connect();
-  let selected = user.find({username: username})
-  bcrypt.compare(password, selected.password, (err, result) => {
-    if (err) {
-      console.error('Error comparing passwords:', err);
-    } 
-    else {
-      if (result) {
-        req.session.selected = {
-          username: selected.username
-        }
-      return res.json({message: "User successfully logged in"})
-      }
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
-  });
+  console.log("started")
+  const {username, password} = req.body;
+  let selected = await user.findOne({username: username})
+  const passwordMatch = await bcrypt.compare(password, selected.password)
+  if(passwordMatch){
+    updateSessionUser(selected,req)
+    res.json({login: true})
+  }else[
+    res.json({login:false})
+  ]
 });
 
 app.get("/home", async(req,res) => {
-  await connect()
-  let selected = await user.find({username: "s"})
-  res.json({user: selected})
-  
+  console.log(req.session.username)
+  res.json({username: req.session.username});
 })
 
 app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
+  res.json({ message: req.session.username});
 });
 
+const updateSessionUser = (user, req) => {
+  req.session.username = user.username
+  req.session.id = user._id
+}
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+connect()
