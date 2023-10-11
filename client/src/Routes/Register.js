@@ -54,7 +54,7 @@ const Register = () => {
                     </div>
                     <div>
                         <h3>Password:</h3>
-                        <input value = {password} onChange={e => setPassword(e.target.value)}></input>
+                        <input type = "password" value = {password} onChange={e => setPassword(e.target.value)}></input>
                     </div>
                     <button type="button" onClick={() => handleLoginSubmit()}>Submit</button>
                 </form>

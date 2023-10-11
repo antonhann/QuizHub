@@ -36,24 +36,6 @@ const LoginPage = () => {
           console.error('Error submitting form:', error);
         }
     }
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    
-    //     try {
-    //       const response = await fetch('/api/submitForm', {
-    //         method: 'POST',
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(formData),
-    //       });
-    
-    //       const result = await response.json();
-    //       console.log(result);
-    //     } catch (error) {
-    //       console.error('Error submitting form:', error);
-    //     }
-    //   };
 
     return(
         <div>
@@ -67,7 +49,7 @@ const LoginPage = () => {
                     </div>
                     <div>
                         <h3>Password:</h3>
-                        <input value = {password} onChange={e => setPassword(e.target.value)}></input>
+                        <input type = "password" value = {password} onChange={e => setPassword(e.target.value)}></input>
                     </div>
                     <button type="submit">Submit</button>
                 </form>

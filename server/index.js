@@ -3,6 +3,7 @@ const session = require('express-session');
 // const connect = require("./data/connect")
 const cors = require("cors")
 const user = require("./data/user")
+const studySet = require("./data/studyset")
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const hashRounds = 10;
@@ -79,6 +80,30 @@ app.post("/login", async (req,res) =>{
     res.status(400).json({login:false, error: "password does not match"})
   }
 });
+app.post("/study-set", async(req,res)=>{
+  const{
+    title,
+    description,
+    studySetArray,
+  } = req.body;
+
+  if(!title || !studySetArray){
+    res.status(400).json({added: false, error: "user input error"})
+    return
+  }
+  try{
+    const newStudySet = await studySet.create({
+      userId: req.session._id,
+      title: title,
+      description: description,
+      studySetArray: studySetArray
+    })
+    res.json({added:true})
+  }
+  catch(error){
+    res.status(400).json({added: false, error: error})
+  }
+})
 
 app.get("/home", async(req,res) => {
   res.json({username: req.session.username});
