@@ -1,8 +1,25 @@
+import { useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
+import { useUser } from '../../User';
 const Navbar = (props) => { 
     const {
-      active,
+      active
     } = props
+    const {currentUser} = useUser();
+    const handleLogout = async () => {
+      let response = await fetch("localhost:3005/logout",{
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if(response.ok){
+        console.log("successfully logged out")
+      }else{
+        console.log("couldnt log out")
+      }
+    }
     const navigate = useNavigate();
     return(
         <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme = "dark">
@@ -16,7 +33,8 @@ const Navbar = (props) => {
               <NavLinks linkName = "Create" active = {active} href = "/create"/>
               <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
-              <button type = "button" onClick={() => {navigate("/login")}}>Login</button>
+              {console.log(currentUser)}
+              {!currentUser? <button type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button type = "button" onClick={() => handleLogout()}>{currentUser.username}</button>}
             </ul>
           </div>
         </div>

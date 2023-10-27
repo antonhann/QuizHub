@@ -13,7 +13,7 @@ const Register = () => {
             return
             //handle incorrect form values
         }
-        let response = await fetch('http://localhost:3005/register',{
+        let response = await fetch('http://localhost:3003/register',{
             method: "POST",
             credentials: 'include',
             headers: {

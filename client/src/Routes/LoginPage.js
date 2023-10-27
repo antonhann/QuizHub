@@ -2,11 +2,12 @@ import { useState } from "react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../User";
 const LoginPage = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
-
+    const {setCurrentUser}= useUser();
     const handleLoginSubmit = async (e) => {
         e.preventDefault()
         if(!username || !password){
@@ -14,7 +15,7 @@ const LoginPage = () => {
             return
         }
         try {
-          const response = await fetch('http://localhost:3005/login', {
+          const response = await fetch('http://localhost:3003/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -27,6 +28,7 @@ const LoginPage = () => {
           });
           const result = await response.json();
           if(result.login){
+            setCurrentUser({username:username})
             navigate("/")
           }else{
             console.log(result)
