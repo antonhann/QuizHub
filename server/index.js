@@ -7,13 +7,14 @@ const studySet = require("./data/studyset")
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const hashRounds = 10;
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 3003;
 
 const app = express();
 app.use(
   cors({
     origin: 'http://localhost:3000', // Replace with your actual client origin
     credentials: true,
+    exposedHeaders: ['set-cookie'], // Allow the 'set-cookie' header to be exposed
   })
 );
 app.use(bodyParser.json());//to be able to read the request body properly of the api post call
@@ -27,19 +28,20 @@ app.use(
     cookie: {
       secure: false, // Set to true if using HTTPS
       httpOnly: true,
+      name:"antoncookies",
     },
   })
 );
 
 
 const mongoose = require("mongoose")
-const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 async function connect(){
   console.log("connecting")
-    await mongoose.connect(url)
-    console.log("connected")
+  await mongoose.connect(url)
+  console.log("connected")
 }
 
 app.post("/register", async (req,res) =>{
@@ -56,14 +58,16 @@ app.post("/register", async (req,res) =>{
       password: hashPassword
     });
     updateSessionUser(newUser,req)
+    // console.log('Cookies in response:', res.get('Set-Cookie'));
+    // res.cookie('authToken', selected._id, { httpOnly: true });
     res.json({ added: true, user: newUser });
   }
   catch(error){
+    console.error(error)
     res.status(400).json({message: error})
   }
   return;
 })
-
 app.post("/login", async (req,res) =>{
   const {username, password} = req.body;
   let selected = await user.findOne({username: username})
@@ -74,12 +78,34 @@ app.post("/login", async (req,res) =>{
   const passwordMatch = await bcrypt.compare(password, selected.password)
   if(passwordMatch){
     await updateSessionUser(selected,req)
+    // res.cookie('authToken', 'your-token-value', { httpOnly: true, path: '/', domain: 'localhost' });
+    // console.log('Cookies in response:', res.get('Set-Cookie'));
     res.json({login: true})
-    console.log(req.session.username)
   }else{
     res.status(400).json({login:false, error: "password does not match"})
   }
 });
+app.post("/logout", async (req,res) => {
+  console.log("hello")
+  const id = req.session.id
+  if(id){
+    req.session.destroy((err) => {
+      if(err){
+        console.error("error destroying current session", err)
+        res.status(500).json({deleted: false}) //internal server error
+      }
+      else{
+        // res.clearCookie("antoncookies")
+        // delete res.session.username
+        // delete res.session.id
+        res.json({deleted: true})
+      }
+    })
+  }
+  else{
+    res.status(400).json({deleted: false}) //bad request
+  }
+})
 app.post("/study-set", async(req,res)=>{
   const{
     title,
@@ -105,7 +131,7 @@ app.post("/study-set", async(req,res)=>{
   }
 })
 
-app.get("/home", async(req,res) => {
+app.get("/currentUser", async(req,res) => {
   res.json({username: req.session.username});
 })
 const updateSessionUser = (user, req) => {

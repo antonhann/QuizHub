@@ -1,26 +1,26 @@
-import { useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
-import { useUser } from '../../User';
 const Navbar = (props) => { 
     const {
-      active
+      active,
+      currentUser
     } = props
-    const {currentUser} = useUser();
+    const navigate = useNavigate();
     const handleLogout = async () => {
-      let response = await fetch("localhost:3005/logout",{
+      let response = await fetch("http://localhost:3003/logout",{
         method: "POST",
         credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      if(response.ok){
+      const res = await response.json();
+      if(res.deleted){
+        window.location.reload();
         console.log("successfully logged out")
       }else{
         console.log("couldnt log out")
       }
     }
-    const navigate = useNavigate();
     return(
         <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme = "dark">
         <div className="container-fluid">
@@ -33,8 +33,8 @@ const Navbar = (props) => {
               <NavLinks linkName = "Create" active = {active} href = "/create"/>
               <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
-              {console.log(currentUser)}
-              {!currentUser? <button type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button type = "button" onClick={() => handleLogout()}>{currentUser.username}</button>}
+              {/* <button type = "button" onClick={() => {navigate("/login")}}>Login</button> */}
+              {!currentUser? <button type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button type = "button" onClick={() => handleLogout()}>Logout</button>}
             </ul>
           </div>
         </div>

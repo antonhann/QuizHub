@@ -1,16 +1,40 @@
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useState } from "react";
-import { useUser } from "../User";
+import { useEffect, useState } from "react";
+import fetchUser from "./helpers/fetchUser";
 const Home = () => {
-    const [message, changeMessage] = useState("")
-    const {currentUser} = useUser()
+    const [currentUser,changeCurrentUser] = useState("");
+    const[loading, setLoading] = useState(true);
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try{
+                const response = await fetch('http://localhost:3003/currentUser', {
+                    credentials: 'include',
+                });
+                const res = await response.json()
+                console.log(res)
+                changeCurrentUser(res.username)
+            }catch(error){
+                console.error(error)
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchCurrentUser();
+    },[])
+    if(loading){
+        return(
+            <div>
+                Loading...
+            </div>
+        )
+    }
     return(
         <div>
-            <Navbar active = "LinkOne"/>
+            <Navbar active = "LinkOne" currentUser = {currentUser}/>
             <div className="landingPage">
                 <div className="landingPageContainer">
-                        <h2 className="landingPageHeading">WELCOME TO QUIZHUB {currentUser.username}</h2>
+                        <h2 className="landingPageHeading">WELCOME TO QUIZHUB {currentUser? currentUser : ""}</h2>
                     <div className="btn">
                         <button className ="mainButton">BTN</button>
                     </div>
