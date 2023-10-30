@@ -11,7 +11,10 @@ const defaultArray = [
     new StudyCard(),
 ]
 
-const CreateStudySet = () => {
+const CreateStudySet = (props) => {
+    const {
+        currentUser,
+    } = props
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
     const [cardArray, changeArr] = useState([])
@@ -40,7 +43,7 @@ const CreateStudySet = () => {
     const addCard = () =>{
         changeArr(cardArray.concat(new StudyCard()))
     }
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
         const newArr = cardArray.filter((item) => {
             return item.term !== "" && item.answer !== ""
@@ -59,16 +62,36 @@ const CreateStudySet = () => {
             return;
         }
         changeArr(newArr)
-
-        const uniqueId = uuidv4();
         let studySet = {
-            id: uniqueId,
             title: title,
             description: description,
-            date: new Date(),
-            studyCards: cardArray,
+            studySetArray: cardArray,
         }
-        navigate('/', {replace: true});
+        try{
+            let response = await fetch('http://localhost:3003/create-study-set',{
+                method: "POST",
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(studySet),
+            })
+            if (!response.ok) {
+                // Handle error, e.g., display an error message to the user
+                console.error('Adding Study Card failed. Status:', response.status);
+                return;
+            }
+            const result = await response.json()
+            if(result.added){
+                navigate('/', {replace: true});
+            }else{
+                console.error("error adding study set to the DB");
+            }
+            
+        }
+        catch(error){
+            console.error(error)
+        }
     }
     // eslint-disable-next-line
     useEffect(() => {
@@ -76,9 +99,20 @@ const CreateStudySet = () => {
             changeArr(defaultArray);
         }
     })
+    if(Object.keys(currentUser).length === 0){
+        return(
+            <div>
+                <Navbar active = "Create" currentUser = {currentUser}/>
+                <div className="studySetCollection">
+                    <h2>pls log in</h2>
+                </div>
+                <Footer/>
+            </div>
+        )
+    }   
     return(
         <div>
-            <Navbar active = "Create"/>
+            <Navbar active = "Create" currentUser = {currentUser}/>
             <div>
                 <div className="createStudySetHeading">
                         <h2>Create a Study Set!</h2>

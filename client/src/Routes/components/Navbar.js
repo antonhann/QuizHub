@@ -16,7 +16,6 @@ const Navbar = (props) => {
       const res = await response.json();
       if(res.deleted){
         window.location.reload();
-        console.log("successfully logged out")
       }else{
         console.log("couldnt log out")
       }
@@ -34,7 +33,7 @@ const Navbar = (props) => {
               <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
               {/* <button type = "button" onClick={() => {navigate("/login")}}>Login</button> */}
-              {!currentUser? <button type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button type = "button" onClick={() => handleLogout()}>Logout</button>}
+              {Object.keys(currentUser).length === 0 ? <button type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button type = "button" onClick={() => handleLogout()}>Logout</button>}
             </ul>
           </div>
         </div>

@@ -7,17 +7,48 @@ import StudySetCollection from './Routes/StudySetCollection';
 import ViewStudySet from './Routes/ViewStudySet';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
-
+import { useEffect, useState } from 'react';
+import { fetchCurrentUser } from './Routes/helpers/fetchUser';
 function App() {
+  const [currentUser,changeCurrentUser] = useState({});
+  const[loading, setLoading] = useState(true);
+  useEffect(() => {
+      const fetch = async () => {
+          try{
+              const user = await fetchCurrentUser();
+              if(user.username && user.id){
+                changeCurrentUser({
+                  username: user.username,
+                  id: user.id
+                })
+              }else{
+                changeCurrentUser({})
+              }
+              
+          }catch(error){  
+              console.error(error)
+          }finally{
+              setLoading(false)
+          }
+      }
+      fetch();
+  },[])
+  if(loading){
+      return(
+          <div>
+              Loading...
+          </div>
+      )
+  }
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path = "/" element = {<Home/>}/>
-          <Route path = "/login" element = {<LoginPage/>}/>
-          <Route path = "/register" element = {<Register/>}/>
-          <Route path = "/create" element = {<CreateStudySet/>}/>
-          <Route path = "/study-sets" element = {<StudySetCollection/>}/>
+          <Route path = "/" element = {<Home currentUser = {currentUser}/>}/>
+          <Route path = "/login" element = {<LoginPage currentUser = {currentUser}/>}/>
+          <Route path = "/register" element = {<Register currentUser = {currentUser}/>}/>
+          <Route path = "/create" element = {<CreateStudySet currentUser = {currentUser}/>}/>
+          <Route path = "/study-sets" element = {<StudySetCollection currentUser = {currentUser}/>}/>
           <Route
             path="/:id/view-study-set"
             element = {<ViewStudySet/>}

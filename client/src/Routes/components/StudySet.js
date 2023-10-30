@@ -10,10 +10,11 @@ const StudySet = (props) => {
         const customRoute = '/' + studySet.id + '/view-study-set';
         navigate(customRoute)
     }
+    console.log(typeof(studySet.createdAt))
     return(
         <div className="studySet" onClick={() => {handleStudySetClick()}}>
             <div>{studySet.title}</div>
-            <div>{studySet.date.getMonth()}</div>
+            <div>{studySet.createdAt}</div>
         </div>
     )
 }

@@ -34,7 +34,7 @@ app.use(
 );
 
 
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
@@ -86,7 +86,6 @@ app.post("/login", async (req,res) =>{
   }
 });
 app.post("/logout", async (req,res) => {
-  console.log("hello")
   const id = req.session.id
   if(id){
     req.session.destroy((err) => {
@@ -106,20 +105,19 @@ app.post("/logout", async (req,res) => {
     res.status(400).json({deleted: false}) //bad request
   }
 })
-app.post("/study-set", async(req,res)=>{
+app.post("/create-study-set", async(req,res)=>{
   const{
     title,
     description,
     studySetArray,
   } = req.body;
-
-  if(!title || !studySetArray){
-    res.status(400).json({added: false, error: "user input error"})
+  if(!title || !studySetArray || !req.session.username){
+    res.status(400).json({added: false, error: "user error"})
     return
   }
   try{
-    const newStudySet = await studySet.create({
-      userId: req.session._id,
+    const ss = await studySet.create({
+      userId: req.session.id,
       title: title,
       description: description,
       studySetArray: studySetArray
@@ -132,8 +130,25 @@ app.post("/study-set", async(req,res)=>{
 })
 
 app.get("/currentUser", async(req,res) => {
-  res.json({username: req.session.username});
+  if(req.session.username){
+    res.json({
+      user: true,
+      username: req.session.username,
+      id: req.session.id,
+    });
+  }else{
+    res.json({
+      user: false,
+    })
+  }
 })
+
+app.get("/study-set", async(req,res) => {
+  let response = await studySet.find({userId: req.session.id});
+  // console.log(response)
+  res.json(response)
+})
+
 const updateSessionUser = (user, req) => {
   req.session.username = user.username
   req.session.id = user._id

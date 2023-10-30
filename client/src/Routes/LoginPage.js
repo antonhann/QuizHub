@@ -27,8 +27,9 @@ const LoginPage = () => {
           const result = await response.json();
           if(result.login){
             navigate("/")
+            window.location.reload();
           }else{
-            console.log(result)
+            console.error(result)
             //hnadle error of not being logged in
           }
         } catch (error) {
@@ -38,7 +39,7 @@ const LoginPage = () => {
 
     return(
         <div>
-            <Navbar/>
+            <Navbar currentUser = {true}/>
             <div className="loginPage">
                 <h2>Login</h2>
                 <form className="loginForm" onSubmit={(e) => handleLoginSubmit(e)}>
