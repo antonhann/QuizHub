@@ -100,14 +100,9 @@ const CreateStudySet = (props) => {
         }
     })
     if(Object.keys(currentUser).length === 0){
+        navigate("/login")
         return(
-            <div>
-                <Navbar active = "Create" currentUser = {currentUser}/>
-                <div className="studySetCollection">
-                    <h2>pls log in</h2>
-                </div>
-                <Footer/>
-            </div>
+            <div>Redirecting YOU!</div>
         )
     }   
     return(

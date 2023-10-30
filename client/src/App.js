@@ -8,12 +8,12 @@ import ViewStudySet from './Routes/ViewStudySet';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import { useEffect, useState } from 'react';
-import { fetchCurrentUser } from './Routes/helpers/fetchUser';
+import { fetchCurrentUser } from './Routes/helpers/fetchAPI';
 function App() {
   const [currentUser,changeCurrentUser] = useState({});
   const[loading, setLoading] = useState(true);
   useEffect(() => {
-      const fetch = async () => {
+      const fetchUser = async () => {
           try{
               const user = await fetchCurrentUser();
               if(user.username && user.id){
@@ -31,7 +31,7 @@ function App() {
               setLoading(false)
           }
       }
-      fetch();
+      fetchUser();
   },[])
   if(loading){
       return(
@@ -51,7 +51,7 @@ function App() {
           <Route path = "/study-sets" element = {<StudySetCollection currentUser = {currentUser}/>}/>
           <Route
             path="/:id/view-study-set"
-            element = {<ViewStudySet/>}
+            element = {<ViewStudySet currentUser = {currentUser}/>}
           />
         </Routes>
       </BrowserRouter>

@@ -2,7 +2,8 @@ const mongoose = require("mongoose")
 const {Schema} = mongoose
 
 const studySet = new Schema({
-    userId: String,
+    username: String,
+    id: String,
     title: String,
     description: String,
     createdAt: {

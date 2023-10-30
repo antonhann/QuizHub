@@ -117,7 +117,7 @@ app.post("/create-study-set", async(req,res)=>{
   }
   try{
     const ss = await studySet.create({
-      userId: req.session.id,
+      username: req.session.username,
       title: title,
       description: description,
       studySetArray: studySetArray
@@ -143,15 +143,19 @@ app.get("/currentUser", async(req,res) => {
   }
 })
 
-app.get("/study-set", async(req,res) => {
-  let response = await studySet.find({userId: req.session.id});
-  // console.log(response)
+app.get("/study-set-collection", async(req,res) => {
+  let response = await studySet.find({username: req.session.username});
   res.json(response)
 })
-
+app.post("/view-study-set", async(req,res) => {
+  const {
+    studySetID,
+  } = req.body
+  let response = await studySet.find({_id: studySetID});
+  res.json(response)
+})
 const updateSessionUser = (user, req) => {
   req.session.username = user.username
-  req.session.id = user._id
   req.session.save(); 
 }
 

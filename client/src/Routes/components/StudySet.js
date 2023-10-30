@@ -7,10 +7,9 @@ const StudySet = (props) => {
     } = props
     const navigate = useNavigate()
     const handleStudySetClick = () => {
-        const customRoute = '/' + studySet.id + '/view-study-set';
+        const customRoute = '/' + studySet._id + '/view-study-set';
         navigate(customRoute)
     }
-    console.log(typeof(studySet.createdAt))
     return(
         <div className="studySet" onClick={() => {handleStudySetClick()}}>
             <div>{studySet.title}</div>

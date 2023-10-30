@@ -33,6 +33,7 @@ const Register = () => {
         const result = await response.json()
         if(result.added){
             navigate('/', {replace: true});
+            window.location.reload();
         }else{
             console.log(result)
         }
@@ -40,7 +41,7 @@ const Register = () => {
     }
     return (
         <div>
-            <Navbar/>
+            <Navbar currentUser = {{}}/>
             <div className="loginPage">
                 <h2>Register</h2>
                 <form className="loginForm">

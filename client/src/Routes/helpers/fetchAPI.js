@@ -11,7 +11,7 @@ export const fetchCurrentUser = async () => {
 }
 export const fetchStudySet = async() => {
     try{
-        const response = await fetch('http://localhost:3003/study-set',{
+        const response = await fetch('http://localhost:3003/study-set-collection',{
             credentials: 'include',
         })
         const res = await response.json();
