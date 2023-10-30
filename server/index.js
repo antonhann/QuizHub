@@ -120,7 +120,7 @@ app.post("/create-study-set", async(req,res)=>{
       username: req.session.username,
       title: title,
       description: description,
-      studySetArray: studySetArray
+      terms: studySetArray
     })
     res.json({added:true})
   }
@@ -147,6 +147,7 @@ app.get("/study-set-collection", async(req,res) => {
   let response = await studySet.find({username: req.session.username});
   res.json(response)
 })
+
 app.post("/view-study-set", async(req,res) => {
   const {
     studySetID,
@@ -154,6 +155,23 @@ app.post("/view-study-set", async(req,res) => {
   let response = await studySet.find({_id: studySetID});
   res.json(response)
 })
+app.post("/delete-study-set", async(req,res) => {
+  const {
+    studySetID,
+  } = req.body
+  try{
+    // console.log(studySet.find({username: req.session.username}))
+    const ss = await studySet.deleteOne({ _id: studySetID});
+    // console.log(studySet.find({username: req.session.username}))
+    res.json(ss)
+  }catch(error){
+    console.error(error)
+    res.json({deleted:false})
+  }
+})
+
+
+
 const updateSessionUser = (user, req) => {
   req.session.username = user.username
   req.session.save(); 

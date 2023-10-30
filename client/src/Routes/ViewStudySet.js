@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import { Terms } from './components/Terms';
+import { deleteStudySet } from './helpers/fetchAPI';
 const ViewStudySet = (props) => {
     const{
         currentUser,
@@ -9,9 +11,19 @@ const ViewStudySet = (props) => {
     const params = useParams();
     const [studySet, setStudySet] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate()
+    const handleDeleteStudySet = async (e,id) => {
+        e.preventDefault();
+        const res = await deleteStudySet(id)
+        if(res.acknowledged){
+            navigate("/study-sets")
+        }else{
+            navigate("/study-sets")
+        }
+    }
+
     useEffect(() => {
         const fetchStudySet = async () => {
-            console.log(params.id)
             try{
                 const response = await fetch('http://localhost:3003/view-study-set', {
                     method: 'POST',
@@ -31,7 +43,7 @@ const ViewStudySet = (props) => {
                 }
             }
             catch(error){
-                console.error(error)
+                console.error('Error fetching data:', error);
             }finally{
                 setLoading(false)
             }
@@ -50,9 +62,13 @@ const ViewStudySet = (props) => {
             <Navbar active = "" currentUser = {currentUser}/>
             <div className="studySetCollection">
                 <h2>{studySet.title}</h2>
-                {studySet.studySetArray.map((item,index) => {
+                {currentUser.username == studySet.username ? <div>
+                    <button>Edit</button>
+                    <button onClick={(e) => handleDeleteStudySet(e,params.id)}>Delete</button>
+                </div> : null}
+                {studySet.terms.map((item,index) => {
                     return(
-                       <div>{item.term} {item.answer}</div>
+                       <Terms key = {index} term = {item.term} answer = {item.answer}></Terms>
                     )
                 })}
             </div>

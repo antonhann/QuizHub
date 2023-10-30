@@ -111,6 +111,14 @@ textarea {
   background-color: red;
   width: 100%;
 }
+.studySetTerms{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  gap: 30px;
+}
 footer{
   display: flex;
   justify-content: center;

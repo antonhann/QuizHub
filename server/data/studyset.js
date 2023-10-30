@@ -10,7 +10,7 @@ const studySet = new Schema({
         type: Date,
         default: Date.now, // You can set a default value (e.g., current timestamp)
     },
-    studySetArray: Array
+    terms: Array
 })
 module.exports = mongoose.model("studySet", studySet)
 // email: {
