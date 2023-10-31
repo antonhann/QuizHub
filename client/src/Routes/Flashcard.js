@@ -35,10 +35,7 @@ const Flashcard = (props) => {
     }
     const handlePrevClick = () => {
         if(!shuffled){
-            if(orderedIndex === 0){
-                //handle when user has finished looking at the entire set
-            }
-            else{
+            if(orderedIndex > 0){
                 changeOrderedIndex(-1)
             }
         }
