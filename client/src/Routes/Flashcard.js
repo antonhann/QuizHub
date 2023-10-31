@@ -11,34 +11,44 @@ const Flashcard = (props) => {
     const studySet = location.state.studySet
     const [orderedIndex, setOrderedIndex] = useState(0)
     const [currentFlashcard,setCurrentFlashcard] = useState(studySet.terms[0])
-    const [showingTerm, toggleFlashcard] = useState(true)
+    const [showingTerm, setShowTerm] = useState(true)
     const [shuffled, setShuffle] = useState(false)
+    const[startWithTerm, setStartWith] = useState(true)
 
     const flipFlashcard = () => {
-        toggleFlashcard(!showingTerm)   
+        setShowTerm(!showingTerm)   
+    }
+    const changeOrderedIndex = (add) => {
+        setOrderedIndex(orderedIndex + add)
+        setCurrentFlashcard(studySet.terms[orderedIndex + add])
+        setShowTerm(startWithTerm)
     }
     const handleNextClick = () => {
         if(!shuffled){
-            if(orderedIndex === studySet.terms.length){
+            if(orderedIndex === studySet.terms.length - 1){
                 //handle when user has finished looking at the entire set
             }
             else{
-                console.log(orderedIndex)
-                setOrderedIndex(orderedIndex + 1)
-                console.log(orderedIndex)
-                setCurrentFlashcard(studySet.terms[orderedIndex])
+                changeOrderedIndex(1)
             }
         }
     }
     const handlePrevClick = () => {
-
+        if(!shuffled){
+            if(orderedIndex === 0){
+                //handle when user has finished looking at the entire set
+            }
+            else{
+                changeOrderedIndex(-1)
+            }
+        }
     }
     return(
         <div>
             <Navbar currentUser = {currentUser}/>
             <div className = "landingPage">
                 <div className='flashcard' onClick={() => flipFlashcard()}>
-                    {showingTerm ? currentFlashcard.term : currentFlashcard.answer}
+                    {startWithTerm && showingTerm ? currentFlashcard.term : currentFlashcard.answer}
                 </div>
                 <div>
                     <button onClick={() => handlePrevClick()}>Prev</button>
