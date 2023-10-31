@@ -21,7 +21,10 @@ const ViewStudySet = (props) => {
             navigate("/study-sets")
         }
     }
-
+    const handleStudySetFlashcardClick = () => {
+        const customRoute = '/' + studySet._id + '/view-study-set/flashcard' ;
+        navigate(customRoute, {state: {studySet: studySet}})
+    }
     useEffect(() => {
         const fetchStudySet = async () => {
             try{
@@ -62,7 +65,11 @@ const ViewStudySet = (props) => {
             <Navbar active = "" currentUser = {currentUser}/>
             <div className="studySetCollection">
                 <h2>{studySet.title}</h2>
-                {currentUser.username == studySet.username ? <div>
+                <div>
+                    <button>Learn</button>
+                    <button onClick={() => handleStudySetFlashcardClick()}>Flashcard</button>
+                </div>
+                {currentUser.username === studySet.username ? <div>
                     <button>Edit</button>
                     <button onClick={(e) => handleDeleteStudySet(e,params.id)}>Delete</button>
                 </div> : null}

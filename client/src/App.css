@@ -119,6 +119,11 @@ textarea {
   background-color: red;
   gap: 30px;
 }
+.flashcard{
+  height: 60%;
+  width: 60%;
+  background-color: red;
+}
 footer{
   display: flex;
   justify-content: center;

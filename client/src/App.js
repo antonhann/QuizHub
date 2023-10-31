@@ -5,6 +5,7 @@ import Register from './Routes/Register';
 import CreateStudySet from './Routes/Create';
 import StudySetCollection from './Routes/StudySetCollection';
 import ViewStudySet from './Routes/ViewStudySet';
+import Flashcard from './Routes/Flashcard';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import { useEffect, useState } from 'react';
@@ -52,6 +53,10 @@ function App() {
           <Route
             path="/:id/view-study-set"
             element = {<ViewStudySet currentUser = {currentUser}/>}
+          />
+          <Route
+            path="/:id/view-study-set/flashcard"
+            element = {<Flashcard currentUser = {currentUser}/>}
           />
         </Routes>
       </BrowserRouter>

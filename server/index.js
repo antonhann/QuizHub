@@ -40,8 +40,14 @@ mongoose.set("strictQuery",false)
 
 async function connect(){
   console.log("connecting")
-  await mongoose.connect(url)
-  console.log("connected")
+  try{
+    await mongoose.connect(url)
+    console.log("connected")
+  }
+  catch(error){
+    console.error("error connecting to the DB: " + error)
+  }
+
 }
 
 app.post("/register", async (req,res) =>{
