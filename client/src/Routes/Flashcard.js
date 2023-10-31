@@ -43,6 +43,8 @@ const Flashcard = (props) => {
             }
         }
     }
+    //need use effect to handle the showing the first current flashcard when popped up
+    //store the users current ordered index and shuffled index to ensure they can pick up where they left off
     return(
         <div>
             <Navbar currentUser = {currentUser}/>
