@@ -9,66 +9,42 @@ const Flashcard = (props) => {
     const params = useParams();
     const location = useLocation();
     const studySet = location.state.studySet
-    const testShuffledSet = shuffle(JSON.parse(JSON.stringify(studySet.terms)))
-    const [orderedIndex, setOrderedIndex] = useState(0)
+    const [currentIndex, setCurrentIndex] = useState(0)
     const [currentFlashcard,setCurrentFlashcard] = useState(studySet.terms[0])
     const [showingTerm, setShowTerm] = useState(true)
     const [shuffled, setShuffle] = useState(false)
-    const [shuffledIndex, setShuffledIndex] = useState(0)
-    const [shuffledSet, setShuffledSet] = useState(testShuffledSet)
     const[startWithTerm, setStartWith] = useState(true)
-    
     const flipFlashcard = () => {
         setShowTerm(!showingTerm)   
     }
-    const changeOrderedIndex = (add) => {
-        setOrderedIndex(orderedIndex + add)
-        setCurrentFlashcard(studySet.terms[orderedIndex + add])
-        setShowTerm(startWithTerm)
-    }
-    const changeShuffledIndex = (add) => {
-        setShuffledIndex(shuffledIndex + add)
-        setCurrentFlashcard(shuffledSet[shuffledIndex + add])
+    const changecurrentIndex = (add) => {
+        setCurrentIndex(currentIndex + add)
+        setCurrentFlashcard(studySet.terms[currentIndex + add])
         setShowTerm(startWithTerm)
     }
     const handleNextClick = () => {
-        if(!shuffled){
-            if(orderedIndex === studySet.terms.length - 1){
-                //handle when user has finished looking at the entire set
-            }
-            else{
-                changeOrderedIndex(1)
-            }
-        }else{
-            if(shuffledIndex === studySet.terms.length - 1){
-                //handle when user has finished looking at the entire set
-            }
-            else{
-                changeShuffledIndex(1)
-            }
+        if(currentIndex === studySet.terms.length - 1){
+            //handle when user has finished looking at the entire set
+        }
+        else{
+            changecurrentIndex(1)
         }
     }
     const handlePrevClick = () => {
-        if(!shuffled){
-            if(orderedIndex > 0){
-                changeOrderedIndex(-1)
-            }
-        }else{
-            if(shuffledIndex > 0){
-                changeShuffledIndex(-1)
-            }
+        if(currentIndex > 0){
+            changecurrentIndex(-1)
         }
     }
     const toggleShuffle = () => {
         const updatedShuffled = !shuffled
         setShuffle(updatedShuffled)
         if(updatedShuffled){
-            setCurrentFlashcard(testShuffledSet[shuffledIndex])
-            setShowTerm(startWithTerm)
+            shuffle(studySet.terms)
         }else{
-            setCurrentFlashcard(studySet.terms[orderedIndex])
-            setShowTerm(startWithTerm)
+            studySet.terms.sort((a,b) => a.number - b.number)
         }
+        setCurrentFlashcard(studySet.terms[currentIndex])
+        setShowTerm(startWithTerm)
     }
     //need use effect to handle the showing the first current flashcard when popped up
     //store the users current ordered index and shuffled index to ensure they can pick up where they left off

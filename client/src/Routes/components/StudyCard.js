@@ -1,7 +1,9 @@
 class StudyCard{
-    constructor(term = "",answer = ""){
-        this.term = term
-        this.answer = answer
+    constructor(){
+        this.number = 0
+        this.term = ""
+        this.answer = ""
+        this.know = false
     }
 };
 

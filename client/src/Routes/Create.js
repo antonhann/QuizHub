@@ -6,9 +6,9 @@ import React, {useState, useEffect} from "react";
 // import { v4 as uuidv4 } from 'uuid';
 import {useNavigate} from 'react-router-dom';
 const defaultArray = [
-    new StudyCard(),
-    new StudyCard(),
-    new StudyCard(),
+    new StudyCard(0),
+    new StudyCard(1),
+    new StudyCard(2),
 ]
 
 const CreateStudySet = (props) => {
@@ -18,6 +18,7 @@ const CreateStudySet = (props) => {
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
     const [cardArray, changeArr] = useState([])
+    const [cardNumber, setCardNumber] = useState(3);
     const navigate = useNavigate();
     
     const handleArrayChange = (e,i,type) => {
@@ -61,6 +62,9 @@ const CreateStudySet = (props) => {
             console.log("not enough cards")
             return;
         }
+        for(var i = 0; i < cardArray.length; i++){
+            newArr[i].number = i;
+        }
         changeArr(newArr)
         let studySet = {
             title: title,
@@ -98,7 +102,7 @@ const CreateStudySet = (props) => {
         if(cardArray.length === 0){
             changeArr(defaultArray);
         }
-    })
+    },[])
     if(Object.keys(currentUser).length === 0){
         navigate("/login")
         return(
