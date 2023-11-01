@@ -6,11 +6,22 @@
   justify-content: center;
   align-items: center;
 }
+.body{
+  background-color: black;
+  color: white;
+  height: 89vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .btn{
   display: flex;
   justify-content: center;
   align-items: center;
   
+}
+.active{
+  background-color: green;
 }
 .mainButton {
   height: 50px;
