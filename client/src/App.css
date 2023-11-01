@@ -123,6 +123,10 @@ textarea {
   height: 60%;
   width: 60%;
   background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
 }
 footer{
   display: flex;
