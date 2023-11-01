@@ -59,10 +59,10 @@ const Flashcard = (props) => {
         setShowTerm(startWithTerm)
     }
     const toggleSmartSort = () => {
-        const newSet = studySet.filter((item) => {
-            return item.know !== true
-        })
-        setStudySet(newSet)
+        // const newSet = studySet.filter((item) => {
+        //     return item.know !== true
+        // })
+        // setStudySet(newSet)
         setSmartSort(!smartSort)
     }
     const handleDontKnowClick = () => {
