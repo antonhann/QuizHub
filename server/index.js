@@ -4,6 +4,7 @@ const session = require('express-session');
 const cors = require("cors")
 const user = require("./data/user")
 const studySet = require("./data/studyset")
+const flashcard = require("./data/flashcard")
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const hashRounds = 10;
@@ -174,6 +175,75 @@ app.post("/delete-study-set", async(req,res) => {
     console.error(error)
     res.json({deleted:false})
   }
+})
+
+app.post("/set-flashcard-data", async(req,res) => {
+  const{
+    studySetID,
+    studySet,
+    currentIndex,
+    showingTerm,
+    shuffled,
+    smartSort,
+    knowTerms,
+    endOfStudySet,
+    startsWithTerm,
+  } = req.body
+  if (!req.session.username){
+    //handle when its not logged in
+  }
+  let response = await flashcard.find({username: req.session.username, studySetID: studySetID});
+  try{
+    if(response.length == 0){
+      //handle when user has not used this flashcard
+      let newFlashcardData = await flashcard.create({
+        username: req.session.username,
+        studySetID:studySetID,
+        studySet: studySet,
+        currentIndex: currentIndex,
+        showingTerm: showingTerm,
+        shuffled: shuffled,
+        smartSort: smartSort,
+        knowTerms: knowTerms,
+        endOfStudySet: endOfStudySet,
+        startsWithTerm: startsWithTerm,
+      })
+      //handle error 
+      res.json({ok: true})
+    }else{
+      let updatedFlashcardData = await flashcard.updateOne({username: req.session.username},
+        {
+          studySetID:studySetID,
+          studySet: studySet,
+          currentIndex: currentIndex,
+          showingTerm: showingTerm,
+          shuffled: shuffled,
+          smartSort: smartSort,
+          knowTerms: knowTerms,
+          endOfStudySet: endOfStudySet,
+          startsWithTerm: startsWithTerm,
+        })
+        //handle error
+        if(!updatedFlashcardData.acknowledged){
+          
+        }
+        res.json({ok: true})
+    }
+  }catch(error){
+    console.error(error)
+    res.json({ok: false})
+  }
+})
+app.post("/view-flashcard-data", async(req,res) => {
+  const{
+    studySetID,
+  } = req.body
+  const response = await flashcard.find({studySetID: studySetID, username: req.session.username})
+  if(response.length === 0){
+    res.json({found: false});
+    return;
+  }
+  res.json({data: response, found: true})
 })
 
 

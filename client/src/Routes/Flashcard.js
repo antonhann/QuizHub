@@ -1,7 +1,7 @@
 import { useParams, useLocation} from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 const Flashcard = (props) => {
     const{
         currentUser
@@ -16,14 +16,43 @@ const Flashcard = (props) => {
     const [smartSort, setSmartSort] = useState(false)
     const [knowTerms, setKnowTerms] = useState(0)
     const [endOfStudySet, setEndOfStudySet] = useState(false)
-    const[startWithTerm, setStartWith] = useState(true)
-
+    const[startsWithTerm, setStartsWith] = useState(true)
+    const[loading, setLoading] = useState(true)
     const flipFlashcard = () => {
         setShowTerm(!showingTerm)   
     }
+    const updateFlashcardData = async () => {
+        const updatedData = {
+            studySetID: params.id,
+            studySet: studySet,
+            currentIndex: currentIndex,
+            showingTerm: showingTerm,
+            shuffled: shuffled,
+            smartSort: smartSort,
+            knowTerms: knowTerms,
+            endOfStudySet: endOfStudySet,
+            startsWithTerm: startsWithTerm,
+        }
+        let response = await fetch('http://localhost:3003/set-flashcard-data',{
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+        if(!response.ok){
+            console.error('Adding Flashcard Data failed. Status:', response.status);
+            return;
+        }
+        const result = await response.json()
+        if(!result.ok){
+            console.error("error adding Flashcard to the DB");
+        }
+    }
     const changecurrentIndex = (add) => {
         setCurrentIndex(currentIndex + add)
-        setShowTerm(startWithTerm)
+        setShowTerm(startsWithTerm)
     }
     const handleNextClick = () => {
         if(currentIndex === studySet.length - 1){
@@ -56,13 +85,9 @@ const Flashcard = (props) => {
             const remainingSet = studySet.slice(currentIndex).sort((a,b) => a.number - b.number)
             setStudySet(doneSet.concat(remainingSet))
         }
-        setShowTerm(startWithTerm)
+        setShowTerm(startsWithTerm)
     }
     const toggleSmartSort = () => {
-        // const newSet = studySet.filter((item) => {
-        //     return item.know !== true
-        // })
-        // setStudySet(newSet)
         setSmartSort(!smartSort)
     }
     const handleDontKnowClick = () => {
@@ -101,6 +126,54 @@ const Flashcard = (props) => {
         }
         
     }
+    useEffect(() => {
+        const fetchFlashcardData = async () => {
+            try{
+                const response = await fetch('http://localhost:3003/view-flashcard-data', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        studySetID: params.id
+                    }),
+                  });
+                const res = await response.json();
+                if(res.found){
+                    const data = res.data[0]
+                    console.log(data);
+                    setStudySet(data.studySet);
+                    setCurrentIndex(data.currentIndex);
+                    setShowTerm(data.showingTerm);
+                    setShuffle(data.shuffled);
+                    setSmartSort(data.smartSort);
+                    setKnowTerms(data.knowTerms);
+                    setEndOfStudySet(data.endOfStudySet);
+                    setStartsWith(data.startsWithTerm);
+                }else{
+                    //handle error when it is not found
+                }
+            }
+            catch(error){
+                console.error('Error fetching flashcard data:', error);
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchFlashcardData()
+    },[])
+    useEffect(() => {
+        console.log(shuffled)
+        updateFlashcardData();
+    },[studySet,currentIndex,showingTerm,shuffled,smartSort,knowTerms,endOfStudySet,startsWithTerm])
+    if(loading){
+        return(
+            <div>
+                Loading...
+            </div>
+        )
+    }
     //need use effect to handle the showing the first current flashcard when popped up
     //store the users current ordered index and shuffled index to ensure they can pick up where they left off
     return(
@@ -112,7 +185,7 @@ const Flashcard = (props) => {
                     <div>{currentIndex + 1} / {studySet.length}</div>
                     <div className='flashcard' onClick={() => flipFlashcard()}>
                         {
-                        startWithTerm && showingTerm ? 
+                        startsWithTerm && showingTerm ? 
                         studySet[currentIndex].term : studySet[currentIndex].answer
                         }
                     </div>
