@@ -70,7 +70,7 @@ const ViewStudySet = (props) => {
                     <button onClick={() => handleStudySetFlashcardClick()}>Flashcard</button>
                 </div>
                 {currentUser.username === studySet.username ? <div>
-                    <button>Edit</button>
+                    <button onClick={() => navigate("/Create",{state:{new: false, id: studySet._id}})}>Edit</button>
                     <button onClick={(e) => handleDeleteStudySet(e,params.id)}>Delete</button>
                 </div> : null}
                 {studySet.terms.map((item,index) => {

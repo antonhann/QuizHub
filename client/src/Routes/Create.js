@@ -4,7 +4,7 @@ import StudyCardInput from "./components/StudyCardInput";
 import StudyCard from "./components/StudyCard";
 import React, {useState, useEffect} from "react";
 // import { v4 as uuidv4 } from 'uuid';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 const defaultArray = [
     new StudyCard(0),
     new StudyCard(1),
@@ -15,15 +15,15 @@ const CreateStudySet = (props) => {
     const {
         currentUser,
     } = props
+    const location = useLocation();
     const [title,changeTitle] = useState("")
     const [description, changeDescription] = useState("")
-    const [cardArray, changeArr] = useState([])
-    const [cardNumber, setCardNumber] = useState(3);
+    const [studySet, setStudySet] = useState([])
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate();
-    
     const handleArrayChange = (e,i,type) => {
         const {value} = e.target
-        const updatedArray = cardArray.map((item,index) => {
+        const updatedArray = studySet.map((item,index) => {
             if(index === i){
                 if(type === "term"){
                     item.term = value
@@ -33,20 +33,20 @@ const CreateStudySet = (props) => {
             }
             return item
         })
-        changeArr(updatedArray)
+        setStudySet(updatedArray)
     }
     const removeCard = (i) =>{
-        const newArr = cardArray.filter((item,index) => {
+        const newArr = studySet.filter((item,index) => {
             return index !== i;   
         })
-        changeArr(newArr)
+        setStudySet(newArr)
     }
     const addCard = () =>{
-        changeArr(cardArray.concat(new StudyCard()))
+        setStudySet(studySet.concat(new StudyCard()))
     }
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const newArr = cardArray.filter((item) => {
+        const newArr = studySet.filter((item) => {
             return item.term !== "" && item.answer !== ""
         })
         if(newArr.length < 3 && title === ""){
@@ -62,14 +62,16 @@ const CreateStudySet = (props) => {
             console.log("not enough cards")
             return;
         }
-        for(var i = 0; i < cardArray.length; i++){
+        for(var i = 0; i < studySet.length; i++){
             newArr[i].number = i;
         }
-        changeArr(newArr)
-        let studySet = {
+        setStudySet(newArr)
+        let newStudySet = {
             title: title,
             description: description,
-            studySetArray: cardArray,
+            studySetArray: studySet,
+            id: location.state.id,
+            newBool: location.state.new,
         }
         try{
             let response = await fetch('http://localhost:3003/create-study-set',{
@@ -78,7 +80,7 @@ const CreateStudySet = (props) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(studySet),
+                body: JSON.stringify(newStudySet),
             })
             if (!response.ok) {
                 // Handle error, e.g., display an error message to the user
@@ -86,7 +88,7 @@ const CreateStudySet = (props) => {
                 return;
             }
             const result = await response.json()
-            if(result.added){
+            if(result.ok){
                 navigate('/', {replace: true});
             }else{
                 console.error("error adding study set to the DB");
@@ -99,8 +101,39 @@ const CreateStudySet = (props) => {
     }
     // eslint-disable-next-line
     useEffect(() => {
-        if(cardArray.length === 0){
-            changeArr(defaultArray);
+        const fetchStudySet = async () => {
+            try{
+                const response = await fetch('http://localhost:3003/view-study-set', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        studySetID: location.state.id
+                    }),
+                  });
+                const res = await response.json();
+                if(res){
+                    setStudySet(res[0].terms)
+                    changeDescription(res[0].description)
+                    changeTitle(res[0].title)
+                }else{
+                    //handle when empty or not found
+                }
+            }
+            catch(error){
+                console.error('Error fetching data:', error);
+            }finally{
+                setLoading(false)
+            }
+        }
+        if(location.state.new){
+            setStudySet(defaultArray);
+            setLoading(false)
+            return;
+        }else{
+            fetchStudySet();
         }
     },[])
     if(Object.keys(currentUser).length === 0){
@@ -108,7 +141,14 @@ const CreateStudySet = (props) => {
         return(
             <div>Redirecting YOU!</div>
         )
-    }   
+    }
+    else if(loading){
+        return(
+            <div>
+                Loading...
+            </div>
+        )
+    }
     return(
         <div>
             <Navbar active = "Create" currentUser = {currentUser}/>
@@ -122,10 +162,10 @@ const CreateStudySet = (props) => {
                         <textarea className = "inputDescription" type="text" placeholder = "Descripition" value={description} onChange={(e) => changeDescription(e.target.value)}></textarea>
                     </div>
                     <div className="errorMessage"></div>
-                    {cardArray.map((item,index) => {
+                    {studySet.map((item,index) => {
                         return (
                             <StudyCardInput 
-                                cardArray = {cardArray}
+                                studySet = {studySet}
                                 handleTermChange = {(e) => {handleArrayChange(e,index,"term")}}
                                 handleAnswerChange = {(e) => {handleArrayChange(e,index,"answer")}}
                                 removeCard = {() => removeCard(index)}

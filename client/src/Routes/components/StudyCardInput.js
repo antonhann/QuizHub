@@ -1,6 +1,6 @@
 const StudyCardInput = (props) => {
     const {
-        cardArray,
+        studySet,
         index,
         term,
         answer,
@@ -13,7 +13,7 @@ const StudyCardInput = (props) => {
             <textarea placeholder="Term" value = {term} onChange={handleTermChange}></textarea>
             <textarea placeholder="Answer" value = {answer} onChange={handleAnswerChange}></textarea>
             <h1>{index}</h1>
-            {(cardArray.length <= 3) ? <button type = "button" >X</button> : <button type = "button" onClick={removeCard}>X</button>}
+            {(studySet.length <= 3) ? <button type = "button" >X</button> : <button type = "button" onClick={removeCard}>X</button>}
         </div>
     )
 }

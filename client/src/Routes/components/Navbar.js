@@ -29,7 +29,10 @@ const Navbar = (props) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
-              <NavLinks linkName = "Create" active = {active} href = "/create"/>
+              <div style = {{cursor: "pointer"}}onClick={() => navigate("/Create",{state:{new: true, id: 0}})}>
+                <NavLinks linkName = "Create" active = {active}/>
+              </div>
+              
               <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
               <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
               {/* <button type = "button" onClick={() => {navigate("/login")}}>Login</button> */}
@@ -45,13 +48,12 @@ const NavLinks = (props) => {
   const {
     linkName,
     href,
-    active
+    active,
   } = props;
-
   return(
     <div>
       {(active === linkName) ?
-              (<li className="nav-item">
+              (<li className="nav-item" onClick = {onclick}>
                 <a className="nav-link active" aria-current="page" href={href}>{linkName}</a>
               </li>) :
               (<li className="nav-item">

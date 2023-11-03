@@ -142,7 +142,6 @@ const Flashcard = (props) => {
                 const res = await response.json();
                 if(res.found){
                     const data = res.data[0]
-                    console.log(data);
                     setStudySet(data.studySet);
                     setCurrentIndex(data.currentIndex);
                     setShowTerm(data.showingTerm);
@@ -164,7 +163,6 @@ const Flashcard = (props) => {
         fetchFlashcardData()
     },[])
     useEffect(() => {
-        console.log(shuffled)
         updateFlashcardData();
     },[studySet,currentIndex,showingTerm,shuffled,smartSort,knowTerms,endOfStudySet,startsWithTerm])
     if(loading){

@@ -117,22 +117,41 @@ app.post("/create-study-set", async(req,res)=>{
     title,
     description,
     studySetArray,
+    newBool,
+    id
   } = req.body;
   if(!title || !studySetArray || !req.session.username){
     res.status(400).json({added: false, error: "user error"})
     return
   }
-  try{
-    const ss = await studySet.create({
-      username: req.session.username,
-      title: title,
-      description: description,
-      terms: studySetArray
-    })
-    res.json({added:true})
-  }
-  catch(error){
-    res.status(400).json({added: false, error: error})
+  if(newBool){
+    try{
+      const ss = await studySet.create({
+        username: req.session.username,
+        title: title,
+        description: description,
+        terms: studySetArray
+      })
+      res.json({ok:true})
+    }
+    catch(error){
+      res.status(400).json({added: false, error: error})
+    }
+  }else{
+    try{
+      const ss = await studySet.updateOne({_id: id},{
+        title: title,
+        description: description,
+        terms: studySetArray
+      })
+      if(!ss.acknowledged){
+        //handle error
+      }
+      res.json({ok:true})
+    }catch(error){
+      console.error(error)
+      res.status(400).json({added: false, error: error})
+    }
   }
 })
 
@@ -167,9 +186,7 @@ app.post("/delete-study-set", async(req,res) => {
     studySetID,
   } = req.body
   try{
-    // console.log(studySet.find({username: req.session.username}))
     const ss = await studySet.deleteOne({ _id: studySetID});
-    // console.log(studySet.find({username: req.session.username}))
     res.json(ss)
   }catch(error){
     console.error(error)

@@ -7,24 +7,29 @@ const StudySet = (props) => {
     } = props
     const navigate = useNavigate()
     const handleStudySetClick = () => {
+        console.log("hello")
         const customRoute = '/' + studySet._id + '/view-study-set';
         navigate(customRoute)
     }
-    const handleDeleteStudySet = async(e,id) => {
-        e.preventDefault();
-        const res = await deleteStudySet(id)
-        if(res.acknowledged){
-            navigate("/study-sets")
-        }else{
-            navigate("/study-sets")
-        }
+    const handleDeleteStudySet = async() => {
+        const res = await deleteStudySet(studySet._id)
+        window.location.reload()
+    }
+    const handleEditStudySet = () => {
+        navigate("/Create",{state:{new: false, id: studySet._id}})
     }
     return(
-        <div className="studySet" onClick={() => {handleStudySetClick()}}>
-            <div>{studySet.title}</div>
-            <div>{studySet.createdAt}</div>
-            <button onClick={(e) => handleDeleteStudySet(e,studySet._id)}>Delete</button>
+        <div>
+            <div className="studySet" onClick={() => {handleStudySetClick()}}>
+                <div>{studySet.title}</div>
+                <div>{studySet.createdAt}</div>
+            </div>
+            <div>
+                <button onClick={() => handleEditStudySet()}>Edit</button>
+                <button onClick={() => handleDeleteStudySet()}>Delete</button>
+            </div>
         </div>
+        
     )
 }
 export default StudySet;
