@@ -1,14 +1,49 @@
 .landingPage{
-  background-color: black;
+  background: linear-gradient(var(--darkBlue), #9198e5);;
   color: white;
   height: 89vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+:root {
+  --darkBlue: #0B4770;
+  --white: #ECF2F6
+}
+nav{
+  background-color: var(--darkBlue);
+  position: sticky!important;
+  top: 0;
+  z-index: 3;
+}
+.navbarBrand{
+  font-size: 35px;
+  color: white;
+  text-decoration: none;
+}
+
+.navLink{
+  color: var(--white);
+  text-decoration: none ;
+}
+.navLink:hover{
+  text-decoration: underline;
+}
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.logButton{
+  width: 70px;
+  height: 40px;
+  background-color: #186192;
 }
 .body{
   background-color: black;
-  color: white;
+  color: var(--white);
   height: 89vh;
   display: flex;
   justify-content: center;
@@ -21,12 +56,13 @@
   
 }
 .active{
-  background-color: green;
+  text-decoration: underline;
+  font-weight: 700;
 }
 .mainButton {
   height: 50px;
   width: 80px;
-  color: #fff;
+  color: var(--white);
   background-color: transparent;
   border-radius: 10px;
 
@@ -34,7 +70,7 @@
 .loginPage{
   background-color: black;
   width: 100%;
-  color: white;
+  color: var(--white);
   height: 90vh;
   display: flex;
   justify-content: center;
@@ -53,16 +89,21 @@
   display: flex;
   gap: 20px;
 }
+.createBody{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-inline: 50px;
+  background-color: var(--darkBlue);
+}
 .createStudySet{
   height: 180vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: black;
-  margin-inline: 100px; /* separation from continainer and outside */
 }
 .createStudySetHeading{
-  background-color: gray;
+  color: var(--white);
   position: sticky;
   top: 0;
   height: 60px;
@@ -73,15 +114,17 @@
   align-items: center;
 }
 .studySetDescription{
-  background-color: cadetblue;
   height: fit-content;
   width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
-textarea {
+textarea,input {
   resize: none!important;
+  border: none;
+  border-bottom: 1px solid black;
+  background-color: #0B4770;
 }
 .inputDescription{
   height: 150px;
@@ -93,15 +136,14 @@ textarea {
 }
 .errorMessage{
   background-color: red;
-  color: white;
+  color: var(--white);
   width: 100%;
   text-align: center;
 }
 .studyCard{
-  background-color: green;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   margin-bottom: 10px;
 }
 
@@ -109,7 +151,7 @@ textarea {
   height: 90vh;
   padding-top: 20px;
   background-color: black;
-  color: white;
+  color: var(--white);
   display: flex;
   justify-content: top;
   flex-direction: column;

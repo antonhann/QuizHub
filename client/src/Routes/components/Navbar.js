@@ -21,25 +21,25 @@ const Navbar = (props) => {
       }
     }
     return(
-        <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme = "dark">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="/">QuizHub</a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
-              <div style = {{cursor: "pointer"}}onClick={() => navigate("/Create",{state:{new: true, id: 0}})}>
-                <NavLinks linkName = "Create" active = {active}/>
-              </div>
-              
-              <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
-              <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
-              {/* <button type = "button" onClick={() => {navigate("/login")}}>Login</button> */}
-              {Object.keys(currentUser).length === 0 ? <button type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button type = "button" onClick={() => handleLogout()}>Logout</button>}
-            </ul>
+      <nav className="navbar navbar-expand-lg" data-bs-theme = "dark">
+          <div className="container-fluid">
+            <a className="navbarBrand" href="/">QuizHub</a>
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse">
+              <ul className="center navbar-nav ms-auto">
+                <div style = {{cursor: "pointer"}}onClick={() => navigate("/Create",{state:{new: true, id: 0}})}>
+                  <NavLinks linkName = "Create" active = {active}/>
+                </div>
+                
+                <NavLinks linkName = "Study Sets" active = {active} href = "/study-sets"/>
+                <NavLinks linkName = "LinkThree" active = {active} href = "/"/>
+                {/* <button type = "button" onClick={() => {navigate("/login")}}>Login</button> */}
+                {Object.keys(currentUser).length === 0 ? <button className = "logButton" type = "button" onClick={() => {navigate("/login")}}>Login</button> : <button className = "logButton"  type = "button" onClick={() => handleLogout()}>Logout</button>}
+              </ul>
+            </div>
           </div>
-        </div>
       </nav>
     )
 }
@@ -54,10 +54,10 @@ const NavLinks = (props) => {
     <div>
       {(active === linkName) ?
               (<li className="nav-item" onClick = {onclick}>
-                <a className="nav-link active" aria-current="page" href={href}>{linkName}</a>
+                <a className="navLink active" aria-current="page" href={href}>{linkName}</a>
               </li>) :
               (<li className="nav-item">
-              <a className="nav-link" aria-current="page" href={href}>{linkName}</a>
+              <a className="navLink" aria-current="page" href={href}>{linkName}</a>
             </li>) }
     </div>
   )

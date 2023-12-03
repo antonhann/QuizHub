@@ -8,11 +8,9 @@ const Home = (props) => {
         <div>
             <Navbar active = "LinkOne" currentUser = {currentUser}/>
             <div className="landingPage">
-                <div className="landingPageContainer">
-                        <h2 className="landingPageHeading">WELCOME TO QUIZHUB {currentUser? currentUser.username : ""}</h2>
-                    <div className="btn">
-                        <button className ="mainButton">BTN</button>
-                    </div>
+                <h2 className="landingPageHeading">WELCOME TO QUIZHUB {currentUser? currentUser.username : ""}</h2>
+                <div className="btn">
+                {Object.keys(currentUser).length === 0 ?<button className ="mainButton">LOGIN</button>: <div></div>}
                 </div>
             </div>
             <Footer/>

@@ -152,7 +152,7 @@ const CreateStudySet = (props) => {
     return(
         <div>
             <Navbar active = "Create" currentUser = {currentUser}/>
-            <div>
+            <div className="createBody">
                 <div className="createStudySetHeading">
                         <h2>Create a Study Set!</h2>
                 </div>
