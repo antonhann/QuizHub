@@ -1,7 +1,7 @@
 import { useParams, useLocation} from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useRef} from 'react';
 const Flashcard = (props) => {
     const{
         currentUser
@@ -16,8 +16,11 @@ const Flashcard = (props) => {
     const [smartSort, setSmartSort] = useState(false)
     const [knowTerms, setKnowTerms] = useState(0)
     const [endOfStudySet, setEndOfStudySet] = useState(false)
-    const[startsWithTerm, setStartsWith] = useState(true)
-    const[loading, setLoading] = useState(true)
+    const [startsWithTerm, setStartsWith] = useState(true)
+    const [loading, setLoading] = useState(true)
+    const [optionPopUp, setOptionsPopUp] = useState(false)
+    const formRef = useRef(null);
+
     const flipFlashcard = () => {
         setShowTerm(!showingTerm)   
     }
@@ -69,7 +72,7 @@ const Flashcard = (props) => {
     }
     const toggleShuffle = () => {
         const updatedShuffled = !shuffled
-        setShuffle(updatedShuffled)
+        setShuffle(!shuffled)
         if(updatedShuffled){
             const doneStudySet = studySet.slice(0,currentIndex)
             const remainingStudySet = studySet.slice(currentIndex)
@@ -103,13 +106,15 @@ const Flashcard = (props) => {
     const handleRestartClick = () => {
         setCurrentIndex(0)
         setKnowTerms(0)
-        setStudySet(originalStudySet.terms.slice(0))
-        if(shuffled){
-            shuffle(studySet)
+        const newStudySet = originalStudySet.terms.slice(); // Create a copy of the original terms
+
+        if (shuffled) {
+            shuffle(newStudySet); // Shuffle the copied array
+        } else {
+            newStudySet.sort((a, b) => a.number - b.number); // Sort the copied array
         }
-        else{
-            studySet.sort((a,b) => a.number - b.number)
-        }
+
+        setStudySet(newStudySet); // Update the state with the new array
         setEndOfStudySet(false)
     }
     const handleReviewUnknownTermsClick = () => {
@@ -126,6 +131,16 @@ const Flashcard = (props) => {
         }
         
     }
+    const toggleOptionsPopup = () => {
+        setOptionsPopUp(!optionPopUp)
+    }
+    const handleClickOutsideForm = (event) => {
+        /**if click is outside of the div close form */
+        if (formRef.current && !formRef.current.contains(event.target)) {
+            setOptionsPopUp(false);
+        }
+    }
+
     useEffect(() => {
         const fetchFlashcardData = async () => {
             try{
@@ -165,6 +180,13 @@ const Flashcard = (props) => {
     useEffect(() => {
         updateFlashcardData();
     },[studySet,currentIndex,showingTerm,shuffled,smartSort,knowTerms,endOfStudySet,startsWithTerm])
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutsideForm);
+        // Cleanup the event listener on component unmount
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutsideForm);
+        };
+      }, [formRef]);
     if(loading){
         return(
             <div>
@@ -189,8 +211,8 @@ const Flashcard = (props) => {
                     </div>
                         {!smartSort ? 
                         <div>
-                        <button onClick={() => handlePrevClick()}>Prev</button>
-                        <button onClick={() => handleNextClick()}>Next</button> 
+                            <button onClick={() => handlePrevClick()}>Prev</button>
+                            <button onClick={() => handleNextClick()}>Next</button> 
                         </div>
                         :
                         <div>
@@ -199,10 +221,26 @@ const Flashcard = (props) => {
                             <button onClick={() => handleKnowCLick()}>KNOW</button> 
                         </div>
                         }
-                    <div>
-                        {shuffled ? <button className = "shuffle active" onClick={() => toggleShuffle()}>Shuffle</button> : <button className = "shuffle" onClick={() => toggleShuffle()}>Shuffle</button>}
-                        {smartSort ? <button className = "smartSortButton active"onClick={() => toggleSmartSort()}>Smart Sort</button> : <button className = "smartSortButton"onClick={() => toggleSmartSort()}>Smart Sort</button>}
-                    </div>
+                    <button className = "flashcardOptionsButton" onClick={() => toggleOptionsPopup()}>Options</button>
+                    {optionPopUp && (
+                            <div className = "flashcardOptionsPopup">
+                                <div ref = {formRef} className='popupInner'>
+                                    <button 
+                                        className={`shuffle ${shuffled ? 'active' : ''}`} 
+                                        onClick={() => toggleShuffle()}
+                                    >
+                                    Shuffle
+                                    </button>
+                                    <button
+                                        className={`smartSortButton ${smartSort ? 'active' : ''}`}
+                                        onClick={() => toggleSmartSort()}
+                                    >
+                                    smartSort
+                                    </button>
+                                    <button onClick={() => toggleOptionsPopup()}>Close</button>
+                                </div>
+                            </div>
+                    )}
                 </div>
             </div> 
             :
@@ -222,7 +260,6 @@ const Flashcard = (props) => {
 }
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
-  
     // While there remain elements to shuffle.
     while (currentIndex > 0) {
   
@@ -234,7 +271,6 @@ function shuffle(array) {
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]];
     }
-  
     return array;
   }
 export default Flashcard;
