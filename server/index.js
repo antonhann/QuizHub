@@ -1,3 +1,8 @@
+//npm start in client
+//enter mongodb password
+//node index.js in server
+
+
 const express = require("express");
 const session = require('express-session');
 // const connect = require("./data/connect")
@@ -36,7 +41,8 @@ app.use(
 
 
 const mongoose = require("mongoose");
-const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+//password here
+const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 async function connect(){
