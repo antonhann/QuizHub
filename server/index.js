@@ -15,6 +15,7 @@ const bodyParser = require('body-parser');
 const hashRounds = 10;
 const PORT = process.env.PORT || 3003;
 
+//set up server side host
 const app = express();
 app.use(
   cors({
@@ -23,8 +24,10 @@ app.use(
     exposedHeaders: ['set-cookie'], // Allow the 'set-cookie' header to be exposed
   })
 );
+
 app.use(bodyParser.json());//to be able to read the request body properly of the api post call
 app.use(bodyParser.urlencoded({ extended: true }));
+
 // to keep track of the current user logged in
 app.use(
   session({
@@ -39,7 +42,7 @@ app.use(
   })
 );
 
-
+//setting up mongoose connection
 const mongoose = require("mongoose");
 //password here
 const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
