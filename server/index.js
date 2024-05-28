@@ -48,6 +48,7 @@ const mongoose = require("mongoose");
 const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
+//connect to mongodb database
 async function connect(){
   console.log("connecting")
   try{
@@ -60,6 +61,7 @@ async function connect(){
 
 }
 
+//registering user call 
 app.post("/register", async (req,res) =>{
   const {username, password, email} = req.body;
   if (!username || !password || !email) {
@@ -101,6 +103,8 @@ app.post("/login", async (req,res) =>{
     res.status(400).json({login:false, error: "password does not match"})
   }
 });
+
+//handle logout call
 app.post("/logout", async (req,res) => {
   const id = req.session.id
   if(id){
@@ -164,6 +168,7 @@ app.post("/create-study-set", async(req,res)=>{
   }
 })
 
+//retrieve current user
 app.get("/currentUser", async(req,res) => {
   if(req.session.username){
     res.json({
@@ -178,11 +183,13 @@ app.get("/currentUser", async(req,res) => {
   }
 })
 
+//get the study set collection of the current user
 app.get("/study-set-collection", async(req,res) => {
   let response = await studySet.find({username: req.session.username});
   res.json(response)
 })
 
+//handle viewing the study set
 app.post("/view-study-set", async(req,res) => {
   const {
     studySetID,
@@ -203,6 +210,7 @@ app.post("/delete-study-set", async(req,res) => {
   }
 })
 
+//set the current user's data on the viewed flashcard
 app.post("/set-flashcard-data", async(req,res) => {
   const{
     studySetID,
@@ -260,6 +268,7 @@ app.post("/set-flashcard-data", async(req,res) => {
     res.json({ok: false})
   }
 })
+//view flashcard data of the user
 app.post("/view-flashcard-data", async(req,res) => {
   const{
     studySetID,
