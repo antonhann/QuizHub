@@ -45,7 +45,7 @@ app.use(
 //setting up mongoose connection
 const mongoose = require("mongoose");
 //password here
-const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 //connect to mongodb database
@@ -130,14 +130,29 @@ app.post("/create-study-set", async(req,res)=>{
     title,
     description,
     studySetArray,
-    newBool,
+    editing,
     id
   } = req.body;
   if(!title || !studySetArray || !req.session.username){
     res.status(400).json({added: false, error: "user error"})
     return
   }
-  if(newBool){
+  if(editing){
+    try{
+        const ss = await studySet.updateOne({_id: id},{
+          title: title,
+          description: description,
+          terms: studySetArray
+        })
+        if(!ss.acknowledged){
+          //handle error
+        }
+        res.json({ok:true})
+      }catch(error){
+        console.error(error)
+        res.status(400).json({added: false, error: error})
+      }
+  }else{
     try{
       const ss = await studySet.create({
         username: req.session.username,
@@ -148,21 +163,6 @@ app.post("/create-study-set", async(req,res)=>{
       res.json({ok:true})
     }
     catch(error){
-      res.status(400).json({added: false, error: error})
-    }
-  }else{
-    try{
-      const ss = await studySet.updateOne({_id: id},{
-        title: title,
-        description: description,
-        terms: studySetArray
-      })
-      if(!ss.acknowledged){
-        //handle error
-      }
-      res.json({ok:true})
-    }catch(error){
-      console.error(error)
       res.status(400).json({added: false, error: error})
     }
   }
