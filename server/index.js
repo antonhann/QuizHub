@@ -42,7 +42,7 @@ app.use(
 
 const mongoose = require("mongoose");
 //password here
-const url = "mongodb+srv://antonha016:@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://antonha016:ilovemongodb@quizhub.hnifsba.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery",false)
 
 async function connect(){

@@ -7,7 +7,6 @@ const StudySet = (props) => {
     } = props
     const navigate = useNavigate()
     const handleStudySetClick = () => {
-        console.log("hello")
         const customRoute = '/' + studySet._id + '/view-study-set';
         navigate(customRoute)
     }

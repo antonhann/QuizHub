@@ -2,6 +2,7 @@ import { useParams, useLocation} from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useState,useEffect, useRef} from 'react';
+import * as Helper from "./components/helper";
 const Flashcard = (props) => {
     const{
         currentUser
@@ -93,6 +94,10 @@ const Flashcard = (props) => {
     const toggleSmartSort = () => {
         setSmartSort(!smartSort)
     }
+    const toggleStartWithTerm = () => {
+        setStartsWith(!startsWithTerm)
+        flipFlashcard()
+    }
     const handleDontKnowClick = () => {
         studySet[currentIndex].know = false
         setKnowTerms(knowTerms - 1)
@@ -157,6 +162,7 @@ const Flashcard = (props) => {
                 const res = await response.json();
                 if(res.found){
                     const data = res.data[0]
+                    console.log(data)
                     setStudySet(data.studySet);
                     setCurrentIndex(data.currentIndex);
                     setShowTerm(data.showingTerm);
@@ -165,6 +171,7 @@ const Flashcard = (props) => {
                     setKnowTerms(data.knowTerms);
                     setEndOfStudySet(data.endOfStudySet);
                     setStartsWith(data.startsWithTerm);
+                    console.log(data.studySet)
                 }else{
                     //handle error when it is not found
                 }
@@ -201,21 +208,26 @@ const Flashcard = (props) => {
             <Navbar currentUser = {currentUser}/>
             {!endOfStudySet ?
             <div>
-                <div className = "body">
+                <div className = "flashcardBody">
                     <div>{currentIndex + 1} / {studySet.length}</div>
-                    <div className='flashcard' onClick={() => flipFlashcard()}>
+                    <div className= {`flashcard ${showingTerm ? '' : 'flipped'}`} onClick={() => flipFlashcard()}>
                         {
-                        startsWithTerm && showingTerm ? 
-                        studySet[currentIndex].term : studySet[currentIndex].answer
+                        showingTerm ? 
+                        <div className='flashcardFace flashcardFront'>
+                            {studySet[currentIndex].term}
+                        </div> : 
+                        <div className='flashcardBack'>
+                            {studySet[currentIndex].answer}
+                        </div>
                         }
                     </div>
                         {!smartSort ? 
-                        <div>
+                        <div className='regularSortFlashcardButtons'>
                             <button onClick={() => handlePrevClick()}>Prev</button>
                             <button onClick={() => handleNextClick()}>Next</button> 
                         </div>
                         :
-                        <div>
+                        <div className='smartSortFlashcardButtons'>
                             <button onClick={() => handlePrevClick()}>UNDO</button>
                             <button onClick={() => handleDontKnowClick()}>IDK</button>
                             <button onClick={() => handleKnowCLick()}>KNOW</button> 
@@ -224,27 +236,35 @@ const Flashcard = (props) => {
                     <button className = "flashcardOptionsButton" onClick={() => toggleOptionsPopup()}>Options</button>
                     {optionPopUp && (
                             <div className = "flashcardOptionsPopup">
-                                <div ref = {formRef} className='popupInner'>
-                                    <button 
-                                        className={`shuffle ${shuffled ? 'active' : ''}`} 
-                                        onClick={() => toggleShuffle()}
-                                    >
-                                    Shuffle
-                                    </button>
-                                    <button
-                                        className={`smartSortButton ${smartSort ? 'active' : ''}`}
-                                        onClick={() => toggleSmartSort()}
-                                    >
-                                    smartSort
-                                    </button>
-                                    <button onClick={() => toggleOptionsPopup()}>Close</button>
+                                <div ref = {formRef} className='flashcardOptionInner'>
+                                    <div className='flashcardOptionHeading'>
+                                        <h2>Options!</h2>
+                                        <button className = "closeButton" onClick={() => toggleOptionsPopup()}>Close</button>
+                                    </div>
+                                    <div className='toggleButtons'>
+                                        <Helper.ToggleButton
+                                            toggleFunction = {() => toggleShuffle()}
+                                            label = "Shuffle"
+                                            check = {shuffled}
+                                        ></Helper.ToggleButton>
+                                        <Helper.ToggleButton
+                                            toggleFunction = {() => toggleSmartSort()}
+                                            label = "Smart Sort"
+                                            check = {smartSort}
+                                        ></Helper.ToggleButton>
+                                        <Helper.ToggleButton
+                                            toggleFunction = {() => toggleStartWithTerm()}
+                                            label = "Start with Term"
+                                            check = {startsWithTerm}
+                                        ></Helper.ToggleButton>
+                                    </div>
                                 </div>
                             </div>
                     )}
                 </div>
             </div> 
             :
-            <div className = "body">
+            <div className = "flashcardBody">
                 {smartSort?
                 (knowTerms !== studySet.length) ? <button onClick={() => handleReviewUnknownTermsClick()}>Review Unknown Terms</button> : <div>CONGRATS KNOWING ALL TERMS</div>
                 :
